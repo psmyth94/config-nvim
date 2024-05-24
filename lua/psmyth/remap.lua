@@ -126,4 +126,4 @@ vim.keymap.set("n", "<leader>zZ", function()
 end)
 
 -- Fugitive
-map('n', '<leader>gp', '<cmd>Git push origin main<CR>', opts)
+map('n', '<leader>gp', '<cmd>Git push origin<CR>', opts)
