@@ -126,20 +126,4 @@ vim.keymap.set("n", "<leader>zZ", function()
 end)
 
 -- Fugitive
--- Create an autocommand group for Fugitive terminal keymaps
-local group = vim.api.nvim_create_augroup("FugitiveTerminalKeymap", { clear = true })
-
--- Define the autocommand
-vim.api.nvim_create_autocmd("TermOpen", {
-  group = group,
-  pattern = "*",
-  callback = function()
-    local buf = vim.api.nvim_get_current_buf()
-    local bufname = vim.api.nvim_buf_get_name(buf)
-
-    if vim.bo[buf].buftype == 'terminal' and bufname:match('fugitive://') then
-        -- git push origin main
-        vim.api.nvim_buf_set_keymap(buf, 'n', '<leader>gp', '<cmd>Git push origin main<CR>', { noremap = true, silent = true })
-    end
-  end,
-})
+map('n', '<leader>gp', '<cmd>Git push origin main<CR>', opts)
