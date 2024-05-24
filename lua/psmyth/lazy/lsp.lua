@@ -3,6 +3,7 @@ return {
     dependencies = {
         "williamboman/mason.nvim",
         "williamboman/mason-lspconfig.nvim",
+        "WhoIsSethDaniel/mason-tool-installer.nvim",
         "hrsh7th/cmp-nvim-lsp",
         "hrsh7th/cmp-buffer",
         "hrsh7th/cmp-path",
@@ -24,11 +25,19 @@ return {
 
         require("fidget").setup({})
         require("mason").setup()
+        require("mason-tool-installer").setup({
+            ensure_installed = {
+                "jupytext",
+                "debugpy",
+            },
+            auto_update = true,
+            run_on_start = true,
+        })
         require("mason-lspconfig").setup({
             ensure_installed = {
                 "lua_ls",
                 "rust_analyzer",
-                "ruff_lsp",
+                "ruff",
                 "pyright"
             },
             handlers = {
@@ -53,21 +62,39 @@ return {
                         }
                     }
                 end,
-                ["ruff_lsp"] = function()
-                    local lspconfig = require("lspconfig")
-                    lspconfig.ruff_lsp.setup {
+                ["ruff"] = function()
+                    require("lspconfig").ruff.setup {
                         on_attach = function(client, bufnr)
-                            if client.name == 'ruff_lsp' then
+                            if client.name == 'ruff' then
                                 -- Disable hover in favor of Pyright
                                 client.server_capabilities.hoverProvider = false
                             end
+
+                            vim.api.nvim_create_autocmd("BufWritePre", {
+                                buffer = bufnr,
+                                callback = function()
+                                    vim.lsp.buf.code_action({
+                                        context = {
+                                            only = { "source.fixAll.ruff" },
+                                        },
+                                        apply = true,
+                                    })
+                                end,
+                                group = vim.api.nvim_create_augroup("fixall_on_save_lsp", { clear = true }),
+                            })
+                            vim.api.nvim_create_autocmd("BufWritePre", {
+                                buffer = bufnr,
+                                callback = function()
+                                    vim.lsp.buf.code_action({
+                                        context = {
+                                            only = { "source.organizeImports.ruff" },
+                                        },
+                                        apply = true,
+                                    })
+                                end,
+                                group = vim.api.nvim_create_augroup("fixall_on_save_lsp", { clear = true }),
+                            })
                         end,
-                        init_options = {
-                            settings = {
-                                -- Any extra CLI arguments for `ruff` go here.
-                                args = {},
-                            }
-                        }
                     }
                 end,
                 ["pyright"] = function ()
@@ -107,9 +134,10 @@ return {
             sources = cmp.config.sources({
                 { name = 'nvim_lsp' },
                 { name = 'luasnip' }, -- For luasnip users.
-            }, {
-                    { name = 'buffer' },
-                })
+            },
+            {
+                { name = 'buffer' },
+            })
         })
 
         vim.diagnostic.config({
