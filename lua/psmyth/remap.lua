@@ -12,6 +12,9 @@ map("n", "N", "Nzzzv")
 map("v", "J", ":m '>+1<CR>gv=gv")
 map("v", "K", ":m '<-2<CR>gv=gv")
 
+map("n", "H", "^")
+map("n", "L", "$")
+
 -- greatest remap ever
 map("x", "<leader>p", [["_dP]])
 
@@ -34,17 +37,6 @@ map("n", "<leader>cnv", "<cmd>cd ~/.config/nvim<CR>")
 map("n", "<leader>go", "<cmd>Ex ~/genomicsml<CR>")
 map("n", "<leader>cgo", "<cmd>cd ~/genomicsml<CR>")
 
--- DAP
-map('n', '<F5>', ":lua require'dap'.continue()<CR>", opts)
-map('n', '<F10>', ":lua require'dap'.step_over()<CR>", opts)
-map('n', '<F11>', ":lua require'dap'.step_into()<CR>", opts)
-map('n', '<F12>', ":lua require'dap'.step_out()<CR>", opts)
-map('n', '<leader>b', ":lua require'dap'.toggle_breakpoint()<CR>", opts)
-map('n', '<leader>B', ":lua require'dap'.set_breakpoint(vim.fn.input('Breakpoint condition: '))<CR>", opts)
-map('n', '<leader>lp', ":lua require'dap'.set_breakpoint(nil, nil, vim.fn.input('Log point message: '))<CR>", opts)
-map('n', '<leader>dr', ":lua require'dap'.repl.open()<CR>", opts)
-map('n', '<leader>dl', ":lua require'dap'.run_last()<CR>", opts)
-
 -- Visual --
 -- Stay in indent mode
 map("v", "<", "<gv", opts)
@@ -64,6 +56,12 @@ map("n", "<C-h>", "<C-w>h", { desc = "switch window left" })
 map("n", "<C-l>", "<C-w>l", { desc = "switch window right" })
 map("n", "<C-j>", "<C-w>j", { desc = "switch window down" })
 map("n", "<C-k>", "<C-w>k", { desc = "switch window up" })
+
+-- switch tmux panes
+-- map("n", "<C-H>", "<cmd>lua require('tmux').move_left()<CR>", { desc = "move tmux left" })
+-- map("n", "<C-L>", "<cmd>lua require('tmux').move_right()<CR>", { desc = "move tmux right" })
+-- map("n", "<C-J>", "<cmd>lua require('tmux').move_bottom()<CR>", { desc = "move tmux down" })
+-- map("n", "<C-k>", "<cmd>lua require('tmux').move_top()<CR>", { desc = "move tmux up" })
 
 -- commenting
 map("n", "<leader>/", function()
@@ -132,14 +130,14 @@ map('n', '<leader>gp', '<cmd>Git push origin<CR>', opts)
 vim.keymap.set("n", "<leader>a", function() require("harpoon.mark").add_file() end)
 vim.keymap.set("n", "<C-e>", function() require("harpoon.ui").toggle_quick_menu() end)
 
-vim.keymap.set("n", "<C-h>", function() require("harpoon.ui").nav_file(1) end)
-vim.keymap.set("n", "<C-t>", function() require("harpoon.ui").nav_file(2) end)
-vim.keymap.set("n", "<C-n>", function() require("harpoon.ui").nav_file(3) end)
-vim.keymap.set("n", "<C-s>", function() require("harpoon.ui").nav_file(4) end)
-vim.keymap.set("n", "<leader><C-h>", function() require("harpoon.mark").set_current_at(1) end)
-vim.keymap.set("n", "<leader><C-t>", function() require("harpoon.mark").set_current_at(2) end)
-vim.keymap.set("n", "<leader><C-n>", function() require("harpoon.mark").set_current_at(3) end)
-vim.keymap.set("n", "<leader><C-s>", function() require("harpoon.mark").set_current_at(4) end)
+vim.keymap.set("n", "<A-H>", function() require("harpoon.ui").nav_file(1) end)
+vim.keymap.set("n", "<A-T>", function() require("harpoon.ui").nav_file(2) end)
+vim.keymap.set("n", "<A-N>", function() require("harpoon.ui").nav_file(3) end)
+vim.keymap.set("n", "<A-S>", function() require("harpoon.ui").nav_file(4) end)
+vim.keymap.set("n", "<leader><A-H>", function() require("harpoon.mark").set_current_at(1) end)
+vim.keymap.set("n", "<leader><A-T>", function() require("harpoon.mark").set_current_at(2) end)
+vim.keymap.set("n", "<leader><A-N>", function() require("harpoon.mark").set_current_at(3) end)
+vim.keymap.set("n", "<leader><A-S>", function() require("harpoon.mark").set_current_at(4) end)
 
 -- Slime
 -- some ipython specific mappings

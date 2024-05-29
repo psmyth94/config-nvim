@@ -38,16 +38,36 @@ return {
                 "lua_ls",
                 "rust_analyzer",
                 "ruff",
-                "pyright"
+                "pyright",
+                "gopls",
+                "bashls",
+                "r_language_server",
             },
             handlers = {
                 function(server_name) -- default handler (optional)
-
                     require("lspconfig")[server_name].setup {
                         capabilities = capabilities
                     }
                 end,
-
+                ["r_language_server"] = function()
+                    require("lspconfig").r_language_server.setup {
+                        capabilities = capabilities,
+                        cmd = {
+                            "R",
+                            "--vanilla",
+                            "--slave", "-e",
+                            "options(languageserver.formatting_style = function(options) { style <- rhino:::rhino_style(); style$space$style_space_around_math_token <- NULL; style }); languageserver::run()"
+                        },
+                        filetypes = { "r" },
+                    }
+                end,
+                ["bashls"] = function()
+                    require("lspconfig").bashls.setup {
+                        capabilities = capabilities,
+                        cmd = { "bash-language-server", "start" },
+                        filetypes = { "sh", "bash" },
+                    }
+                end,
                 ["lua_ls"] = function()
                     local lspconfig = require("lspconfig")
                     lspconfig.lua_ls.setup {
@@ -60,6 +80,19 @@ return {
                                 }
                             }
                         }
+                    }
+                end,
+                ["gopls"] = function()
+                    require("lspconfig").gopls.setup {
+                        capabilities = capabilities,
+                        settings = {
+                            gopls = {
+                                analyses = {
+                                    unusedparams = true,
+                                },
+                                staticcheck = true,
+                            },
+                        },
                     }
                 end,
                 ["ruff"] = function()
@@ -97,7 +130,7 @@ return {
                         end,
                     }
                 end,
-                ["pyright"] = function ()
+                ["pyright"] = function()
                     require('lspconfig').pyright.setup {
                         settings = {
                             pyright = {
@@ -112,7 +145,6 @@ return {
                             },
                         },
                     }
-
                 end,
             }
         })
@@ -132,12 +164,12 @@ return {
                 ["<C-Space>"] = cmp.mapping.complete(),
             }),
             sources = cmp.config.sources({
-                { name = 'nvim_lsp' },
-                { name = 'luasnip' }, -- For luasnip users.
-            },
-            {
-                { name = 'buffer' },
-            })
+                    { name = 'nvim_lsp' },
+                    { name = 'luasnip' }, -- For luasnip users.
+                },
+                {
+                    { name = 'buffer' },
+                })
         })
 
         vim.diagnostic.config({
