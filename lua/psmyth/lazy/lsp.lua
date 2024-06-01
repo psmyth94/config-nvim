@@ -56,7 +56,7 @@ return {
                             "R",
                             "--vanilla",
                             "--slave", "-e",
-                            "options(languageserver.formatting_style = function(options) { style <- rhino:::rhino_style(); style$space$style_space_around_math_token <- NULL; style }); languageserver::run()"
+                            "options(languageserver.formatting_style = function(options) { styler::tidyverse_style(strict=TRUE, indent_by=2)}); languageserver::run()"
                         },
                         filetypes = { "r" },
                     }

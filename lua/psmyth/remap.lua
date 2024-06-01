@@ -1,213 +1,62 @@
 local opts = { noremap = true, silent = true }
 vim.g.mapleader = " "
-local map = vim.keymap.set
-map("n", "<leader>pv", vim.cmd.Ex)
 
-map("n", "J", "mzJ`z")
-map("n", "<C-d>", "<C-d>zz")
-map("n", "<C-u>", "<C-u>zz")
-map("n", "n", "nzzzv")
-map("n", "N", "Nzzzv")
+vim.keymap.set("n", "<leader>pv", vim.cmd.Ex)
 
-map("v", "J", ":m '>+1<CR>gv=gv")
-map("v", "K", ":m '<-2<CR>gv=gv")
+vim.keymap.set("n", "J", "mzJ`z")
+vim.keymap.set("n", "<C-d>", "<C-d>zz")
+vim.keymap.set("n", "<C-u>", "<C-u>zz")
+vim.keymap.set("n", "n", "nzzzv")
+vim.keymap.set("n", "N", "Nzzzv")
 
-map("n", "H", "^")
-map("n", "L", "$")
+vim.keymap.set("v", "J", ":m '>+1<CR>gv=gv")
+vim.keymap.set("v", "K", ":m '<-2<CR>gv=gv")
+
+vim.keymap.set("n", "H", "^")
+vim.keymap.set("n", "L", "$")
 
 -- greatest remap ever
-map("x", "<leader>p", [["_dP]])
+vim.keymap.set("x", "<leader>p", [["_dP]])
 
 -- next greatest remap ever : asbjornHaland
-map({ "n", "v" }, "<leader>y", [["+y]])
-map("n", "<leader>Y", [["+Y]])
+vim.keymap.set({ "n", "v" }, "<leader>y", [["+y]])
+vim.keymap.set("n", "<leader>Y", [["+Y]])
 
-map({ "n", "v" }, "<leader>d", [["_d]])
+vim.keymap.set({ "n", "v" }, "<leader>d", [["_d]])
 
-map("i", "<C-c>", "<Esc>")
+vim.keymap.set("i", "<C-c>", "<Esc>")
 
-map("n", "Q", "<nop>")
-map("n", "<C-f>", "<cmd>silent !tmux neww tmux-sessionizer<CR>")
-map("n", "<leader><leader>", vim.lsp.buf.format)
-map("n", "<leader>s", [[:%s/\v<<C-r><C-w>>//gI<Left><Left><Left>]])
+vim.keymap.set("n", "Q", "<nop>")
+vim.keymap.set("n", "<C-f>", "<cmd>silent !tmux neww tmux-sessionizer<CR>")
+vim.keymap.set("n", "<leader><leader>", vim.lsp.buf.format)
+vim.keymap.set("n", "<leader>s", [[:%s/\v<<C-r><C-w>>//gI<Left><Left><Left>]])
+vim.keymap.set("v", "<leader>s",
+    [[y:%s/\v<C-R>=escape(substitute(@", '\n', '', 'g'), '\.*[]^$~\\<>()/')<CR>//g<Left><Left>]], { noremap = true })
+vim.keymap.set("v", "<leader>S",
+    [[y:%s/\v(<C-R>=escape(substitute(@", '\n', '', 'g'), '\.*[]^$~\\<>()/')<CR>)/\1/g<Left><Left>]], { noremap = true })
 
 -- for goml and nvim quick access
-map("n", "<leader>nv", "<cmd>Ex ~/.config/nvim<CR>")
-map("n", "<leader>cnv", "<cmd>cd ~/.config/nvim<CR>")
-map("n", "<leader>go", "<cmd>Ex ~/genomicsml<CR>")
-map("n", "<leader>cgo", "<cmd>cd ~/genomicsml<CR>")
+vim.keymap.set("n", "<leader>nv", "<cmd>Ex ~/.config/nvim<CR>")
+vim.keymap.set("n", "<leader>cnv", "<cmd>cd ~/.config/nvim<CR>")
+vim.keymap.set("n", "<leader>go", "<cmd>Ex ~/genomicsml<CR>")
+vim.keymap.set("n", "<leader>cgo", "<cmd>cd ~/genomicsml<CR>")
 
 -- Visual --
 -- Stay in indent mode
-map("v", "<", "<gv", opts)
-map("v", ">", ">gv", opts)
+vim.keymap.set("v", "<", "<gv", opts)
+vim.keymap.set("v", ">", ">gv", opts)
 
--- NvChad maps
-map("i", "<C-b>", "<ESC>^i", { desc = "move beginning of line" })
-map("i", "<C-e>", "<ESC>$a", { desc = "move end of line" })
-map("i", "<C-h>", "<Left>", { desc = "move left" })
-map("i", "<C-l>", "<Right>", { desc = "move right" })
-map("i", "<C-j>", "<Down>", { desc = "move down" })
-map("i", "<C-k>", "<Up>", { desc = "move up" })
+vim.keymap.set("n", "<Esc>", "<cmd>noh<CR>", { noremap = true, desc = "general clear highlights" })
 
-map("n", "<Esc>", "<cmd>noh<CR>", { desc = "general clear highlights" })
+-- map("n", "<C-h>", "<C-w>h", { noremap = true, desc = "switch window left" })
+-- map("n", "<C-l>", "<C-w>l", { noremap = true, desc = "switch window right" })
+-- map("n", "<C-j>", "<C-w>j", { noremap = true, desc = "switch window down" })
+-- map("n", "<C-k>", "<C-w>k", { noremap = true, desc = "switch window up" })
 
-map("n", "<C-h>", "<C-w>h", { desc = "switch window left" })
-map("n", "<C-l>", "<C-w>l", { desc = "switch window right" })
-map("n", "<C-j>", "<C-w>j", { desc = "switch window down" })
-map("n", "<C-k>", "<C-w>k", { desc = "switch window up" })
 
 -- switch tmux panes
--- map("n", "<C-H>", "<cmd>lua require('tmux').move_left()<CR>", { desc = "move tmux left" })
--- map("n", "<C-L>", "<cmd>lua require('tmux').move_right()<CR>", { desc = "move tmux right" })
--- map("n", "<C-J>", "<cmd>lua require('tmux').move_bottom()<CR>", { desc = "move tmux down" })
--- map("n", "<C-k>", "<cmd>lua require('tmux').move_top()<CR>", { desc = "move tmux up" })
+-- map("n", "<C-H>", "<cmd>lua require('tmux').move_left()<CR>", { noremap = true, desc = "move tmux left" })
+-- map("n", "<C-L>", "<cmd>lua require('tmux').move_right()<CR>", { noremap = true, desc = "move tmux right" })
+-- map("n", "<C-J>", "<cmd>lua require('tmux').move_bottom()<CR>", { noremap = true, desc = "move tmux down" })
+-- map("n", "<C-k>", "<cmd>lua require('tmux').move_top()<CR>", { noremap = true, desc = "move tmux up" })
 
--- commenting
-map("n", "<leader>/", function()
-    require("Comment.api").toggle.linewise.current()
-end, { desc = "comment toggle" })
-map(
-    "v",
-    "<leader>/",
-    "<ESC><cmd>lua require('Comment.api').toggle.linewise(vim.fn.visualmode())<CR>",
-    { desc = "comment toggle" }
-)
-
-
--- Telescope
-map("n", "<leader>fw", "<cmd>Telescope live_grep<CR>", { desc = "telescope live grep" })
-map("n", "<leader>fb", "<cmd>Telescope buffers<CR>", { desc = "telescope find buffers" })
-map("n", "<leader>fh", "<cmd>Telescope help_tags<CR>", { desc = "telescope help page" })
-map("n", "<leader>ma", "<cmd>Telescope marks<CR>", { desc = "telescope find marks" })
-map("n", "<leader>fo", "<cmd>Telescope oldfiles<CR>", { desc = "telescope find oldfiles" })
-map("n", "<leader>fz", "<cmd>Telescope current_buffer_fuzzy_find<CR>", { desc = "telescope find in current buffer" })
-map("n", "<leader>cm", "<cmd>Telescope git_commits<CR>", { desc = "telescope git commits" })
-map("n", "<leader>gt", "<cmd>Telescope git_status<CR>", { desc = "telescope git status" })
-map("n", "<leader>ff", "<cmd>Telescope find_files<cr>", { desc = "telescope find files" })
-map(
-    "n",
-    "<leader>fa",
-    "<cmd>Telescope find_files follow=true no_ignore=true hidden=true<CR>",
-    { desc = "telescope find all files" }
-)
-
--- zenmode
-vim.keymap.set("n", "<leader>zz", function()
-    require("zen-mode").setup {
-        window = {
-            width = 90,
-            options = {}
-        },
-    }
-    require("zen-mode").toggle()
-    vim.wo.wrap = false
-    vim.wo.number = true
-    vim.wo.rnu = true
-    ColorMyPencils()
-end)
-
-
-vim.keymap.set("n", "<leader>zZ", function()
-    require("zen-mode").setup {
-        window = {
-            width = 80,
-            options = {}
-        },
-    }
-    require("zen-mode").toggle()
-    vim.wo.wrap = false
-    vim.wo.number = false
-    vim.wo.rnu = false
-    vim.opt.colorcolumn = "0"
-    ColorMyPencils()
-end)
-
--- Fugitive
-map('n', '<leader>gp', '<cmd>Git push origin<CR>', opts)
-
--- Harpoon
-vim.keymap.set("n", "<leader>a", function() require("harpoon.mark").add_file() end)
-vim.keymap.set("n", "<C-e>", function() require("harpoon.ui").toggle_quick_menu() end)
-
-vim.keymap.set("n", "<A-H>", function() require("harpoon.ui").nav_file(1) end)
-vim.keymap.set("n", "<A-T>", function() require("harpoon.ui").nav_file(2) end)
-vim.keymap.set("n", "<A-N>", function() require("harpoon.ui").nav_file(3) end)
-vim.keymap.set("n", "<A-S>", function() require("harpoon.ui").nav_file(4) end)
-vim.keymap.set("n", "<leader><A-H>", function() require("harpoon.mark").set_current_at(1) end)
-vim.keymap.set("n", "<leader><A-T>", function() require("harpoon.mark").set_current_at(2) end)
-vim.keymap.set("n", "<leader><A-N>", function() require("harpoon.mark").set_current_at(3) end)
-vim.keymap.set("n", "<leader><A-S>", function() require("harpoon.mark").set_current_at(4) end)
-
--- Slime
--- some ipython specific mappings
-local function slime_send(send_to_repl)
-    local start_line = vim.fn.search('# %%', 'bnW')
-
-
-    if start_line == 0 then
-        start_line = 1
-    end
-
-
-    local end_line = vim.fn.search('# %%', 'nW')
-    if end_line == 0 then
-        end_line = vim.fn.line('$')
-    else
-        end_line = end_line - 1
-    end
-
-
-    if send_to_repl then
-        vim.fn['slime#send_range'](start_line, end_line)
-    end
-
-    return end_line
-end
-
-vim.keymap.set('n', '<leader>cc', function()
-    slime_send(true)
-end, { noremap = true, silent = true })
-
-
-vim.keymap.set('n', '<C-X>', function()
-    local end_line = slime_send(true)
-
-    if vim.fn.search('# %%', 'nW') == 0 then
-        vim.cmd('$')
-        vim.cmd('normal o# %%')
-    else
-        vim.cmd([[normal ]] .. end_line + 2 .. 'G')
-    end
-end, { noremap = true, silent = true })
-
-
-vim.keymap.set('n', '<leader>nc', function()
-    local end_line = slime_send(false)
-
-    if vim.fn.search('# %%', 'nW') == 0 then
-        vim.cmd('$')
-        vim.cmd('normal o')
-        vim.cmd('normal o# %%')
-    else
-        vim.cmd([[normal ]] .. end_line .. 'GO')
-        vim.cmd([[normal O# %%]])
-    end
-
-    vim.cmd('normal j')
-    vim.cmd('startinsert')
-end, { noremap = true, silent = true })
-
-vim.keymap.set('n', '<leader>rr', function()
-    vim.fn['slime#send']('exit()\n')
-    vim.fn['slime#send']('ipython\n')
-end, { noremap = true, silent = true })
-
-vim.keymap.set('n', '<leader>ip', function()
-    vim.fn['slime#send']('ipython\n')
-end, { noremap = true, silent = true })
-
-vim.keymap.set('n', '<leader>gm', function()
-    --
-    vim.fn['slime#send']('conda activate genomicsml\n')
-end, { noremap = true, silent = true })

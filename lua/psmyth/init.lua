@@ -83,3 +83,5 @@ if vim.fn.has("wsl") == 1 then
     end
 end
 
+vim.keymap.set("n", "<C-k>", "<cmd>cprev<CR>", { noremap = true, desc = "quickfix prev" })
+vim.keymap.set("n", "<C-j>", "<cmd>cnext<CR>", { noremap = true, desc = "quickfix next" })
