@@ -1,1 +1,1 @@
-Finally joined the neovim cult
+My neovim config
