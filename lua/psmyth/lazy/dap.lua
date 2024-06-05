@@ -35,7 +35,38 @@ return {
             dapui.close()
         end
 
-        -- https://github.com/go-delve/delve/blob/master/Documentation/usage/dlv_dap.md
+        dap.adapters.codelldb = {
+            type = 'server',
+            port = "${port}",
+            executable = {
+                command = vim.fn.stdpath('data') .. '/mason/bin/codelldb',
+                args = { "--port", "${port}" },
+            }
+        }
+
+        dap.configurations.rust = {
+            {
+                name = "Debug",
+                type = "codelldb",
+                request = "launch",
+                program = function()
+                    return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/target/debug/', 'file')
+                end,
+                cwd = '${workspaceFolder}',
+                stopOnEntry = true,
+                showDisassembly = "never",
+            },
+            {
+                name = "Attach",
+                type = "codelldb",
+                mode = "local",
+                request = "attach",
+                processId = require("dap.utils").pick_process,
+                stopOnEntry = true,
+                showDisassembly = "never",
+            },
+
+        } -- https://github.com/go-delve/delve/blob/master/Documentation/usage/dlv_dap.md
         require('dap-go').setup()
         dap.adapters.python = {
             type = 'executable',

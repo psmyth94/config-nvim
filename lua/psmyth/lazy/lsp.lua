@@ -29,6 +29,7 @@ return {
             ensure_installed = {
                 "jupytext",
                 "debugpy",
+                "codelldb",
             },
             auto_update = true,
             run_on_start = true,

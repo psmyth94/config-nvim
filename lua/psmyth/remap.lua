@@ -31,9 +31,10 @@ vim.keymap.set("n", "<C-f>", "<cmd>silent !tmux neww tmux-sessionizer<CR>")
 vim.keymap.set("n", "<leader><leader>", vim.lsp.buf.format)
 vim.keymap.set("n", "<leader>s", [[:%s/\v<<C-r><C-w>>//gI<Left><Left><Left>]])
 vim.keymap.set("v", "<leader>s",
-    [[y:%s/\v<C-R>=escape(substitute(@", '\n', '', 'g'), '\.*[]^$~\\<>()/')<CR>//g<Left><Left>]], { noremap = true })
+    [[y:%s/\v<C-R>=escape(substitute(@", '\n', '', 'g'), '={}@\.*[]^$~\\<>()/')<CR>//g<Left><Left>]], { noremap = true })
 vim.keymap.set("v", "<leader>S",
-    [[y:%s/\v(<C-R>=escape(substitute(@", '\n', '', 'g'), '\.*[]^$~\\<>()/')<CR>)/\1/g<Left><Left>]], { noremap = true })
+    [[y:%s/\v(<C-R>=escape(substitute(@", '\n', '', 'g'), '={}@\.*[]^$~\\<>()/')<CR>)/\1/g<Left><Left>]],
+    { noremap = true })
 
 -- for goml and nvim quick access
 vim.keymap.set("n", "<leader>nv", "<cmd>Ex ~/.config/nvim<CR>")
@@ -59,4 +60,3 @@ vim.keymap.set("n", "<Esc>", "<cmd>noh<CR>", { noremap = true, desc = "general c
 -- map("n", "<C-L>", "<cmd>lua require('tmux').move_right()<CR>", { noremap = true, desc = "move tmux right" })
 -- map("n", "<C-J>", "<cmd>lua require('tmux').move_bottom()<CR>", { noremap = true, desc = "move tmux down" })
 -- map("n", "<C-k>", "<cmd>lua require('tmux').move_top()<CR>", { noremap = true, desc = "move tmux up" })
-
