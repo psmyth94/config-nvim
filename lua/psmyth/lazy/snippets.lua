@@ -12,22 +12,16 @@ return {
             require("luasnip").filetype_extend("javascript", { "jsdoc" })
 
             --- TODO: What is expand?
-        end,
-    },
-    keys = {
+            vim.keymap.set({ "i" }, "<C-s>e", function() require("luasnip").expand() end, { silent = true })
 
-        { mode = { "i" },      "<C-s>e", function() require("luasnip").expand() end, { silent = true } },
-        { mode = { "i", "s" }, "<C-s>;", function() require("luasnip").jump(1) end,  { silent = true } },
-        { mode = { "i", "s" }, "<C-s>,", function() require("luasnip").jump(-1) end, { silent = true } },
-        {
-            mode = { "i", "s" },
-            "<C-E>",
-            function()
+            vim.keymap.set({ "i", "s" }, "<C-s>;", function() require("luasnip").jump(1) end, { silent = true })
+            vim.keymap.set({ "i", "s" }, "<C-s>,", function() require("luasnip").jump(-1) end, { silent = true })
+
+            vim.keymap.set({ "i", "s" }, "<C-E>", function()
                 if require("luasnip").choice_active() then
                     require("luasnip").change_choice(1)
                 end
-            end,
-            { silent = true }
-        },
+            end, { silent = true })
+        end,
     }
 }
