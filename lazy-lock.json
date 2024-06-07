@@ -38,7 +38,6 @@
   "rose-pine": { "branch": "main", "commit": "87aa437172357ad8f916942bca249ceadc6c68b1" },
   "telescope-dap.nvim": { "branch": "master", "commit": "8c88d9716c91eaef1cdea13cb9390d8ef447dbfe" },
   "telescope.nvim": { "branch": "master", "commit": "d90956833d7c27e73c621a61f20b29fdb7122709" },
-  "tmux.nvim": { "branch": "main", "commit": "53ea7eab504730e7e8397fd2ae0133053d56afc8" },
   "tokyonight.nvim": { "branch": "main", "commit": "02e9028fe3560f38363c2d38f1c87e45eb04fdb3" },
   "trouble.nvim": { "branch": "main", "commit": "c11dc2777d52da2c8da25836817e43608ec951a5" },
   "undotree": { "branch": "master", "commit": "56c684a805fe948936cda0d1b19505b84ad7e065" },
