@@ -48,15 +48,3 @@ vim.keymap.set("v", "<", "<gv", opts)
 vim.keymap.set("v", ">", ">gv", opts)
 
 vim.keymap.set("n", "<Esc>", "<cmd>noh<CR>", { noremap = true, desc = "general clear highlights" })
-
--- map("n", "<C-h>", "<C-w>h", { noremap = true, desc = "switch window left" })
--- map("n", "<C-l>", "<C-w>l", { noremap = true, desc = "switch window right" })
--- map("n", "<C-j>", "<C-w>j", { noremap = true, desc = "switch window down" })
--- map("n", "<C-k>", "<C-w>k", { noremap = true, desc = "switch window up" })
-
-
--- switch tmux panes
--- map("n", "<C-H>", "<cmd>lua require('tmux').move_left()<CR>", { noremap = true, desc = "move tmux left" })
--- map("n", "<C-L>", "<cmd>lua require('tmux').move_right()<CR>", { noremap = true, desc = "move tmux right" })
--- map("n", "<C-J>", "<cmd>lua require('tmux').move_bottom()<CR>", { noremap = true, desc = "move tmux down" })
--- map("n", "<C-k>", "<cmd>lua require('tmux').move_top()<CR>", { noremap = true, desc = "move tmux up" })
