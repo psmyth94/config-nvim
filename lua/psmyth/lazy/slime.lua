@@ -34,7 +34,7 @@ return {
         end, { noremap = true, silent = true })
 
 
-        vim.keymap.set('n', '<C-X>', function()
+        vim.keymap.set('n', '<leader>ss', function()
             local end_line = slime_send(true)
 
             if vim.fn.search('# %%', 'nW') == 0 then
@@ -46,7 +46,7 @@ return {
         end, { noremap = true, silent = true })
 
 
-        vim.keymap.set('n', '<leader>nc', function()
+        vim.keymap.set('n', '<leader>sc', function()
             local end_line = slime_send(false)
 
             if vim.fn.search('# %%', 'nW') == 0 then
@@ -62,18 +62,23 @@ return {
             vim.cmd('startinsert')
         end, { noremap = true, silent = true })
 
-        vim.keymap.set('n', '<leader>rr', function()
+        vim.keymap.set('n', '<leader>sr', function()
             vim.fn['slime#send']('exit()\n')
             vim.fn['slime#send']('ipython\n')
         end, { noremap = true, silent = true })
 
-        vim.keymap.set('n', '<leader>ip', function()
+        vim.keymap.set('n', '<leader>sp', function()
             vim.fn['slime#send']('ipython\n')
         end, { noremap = true, silent = true })
 
+        vim.keymap.set('n', '<leader>sb', function()
+            -- activate the goml conda environment
+            vim.fn['slime#send']('conda activate goml\n')
+        end, { noremap = true, silent = true })
+
         vim.keymap.set('n', '<leader>gm', function()
-            --
-            vim.fn['slime#send']('conda activate genomicsml\n')
+            -- activate the goml conda environment
+            vim.fn['slime#send']('conda activate goml\n')
         end, { noremap = true, silent = true })
     end,
 }
