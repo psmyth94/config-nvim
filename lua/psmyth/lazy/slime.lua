@@ -83,8 +83,58 @@ return {
 
         vim.keymap.set('n', '<leader>st', function()
             -- create a my_script.py from the repl
-            vim.fn['slime#send']('my_script.py <<EOF\n')
+            vim.fn['slime#send']('cat <<EOF > my_script.py\n')
             slime_send(true)
+            vim.fn['slime#send']('EOF\n')
+        end, { noremap = true, silent = true })
+
+        vim.keymap.set('v', '<leader>st', function()
+            vim.fn['slime#send']('cat <<EOF > my_script.py\n')
+            -- send code under the cursor
+            local start_pos = vim.fn.getpos("v")
+            local end_pos = vim.fn.getpos(".")
+            local start_line = start_pos[2]
+            local end_line = end_pos[2]
+            vim.fn['slime#send_range'](start_line, end_line)
+            vim.fn['slime#send']('EOF\n')
+        end, { noremap = true, silent = true })
+
+        local function add_indent(lines, indent)
+            local new_lines = {}
+            for _, line in ipairs(lines) do
+                table.insert(new_lines, indent .. line)
+            end
+            return new_lines
+        end
+
+        vim.keymap.set('n', '<leader>sm', function()
+            vim.fn['slime#send']('cat <<EOF > my_script.py\n')
+            -- send code under the cursor
+            local start_line, end_line = slime_send(false)
+            local lines = vim.api.nvim_buf_get_lines(0, start_line - 1, end_line, false)
+            vim.fn['slime#send']("def main():\n")
+            lines = add_indent(lines, '    ')
+            vim.fn['slime#send'](lines)
+            vim.fn['slime#send']("\n")
+            vim.fn['slime#send']("if __name__ == '__main__':\n")
+            vim.fn['slime#send']("    main()\n")
+            vim.fn['slime#send']('EOF\n')
+        end, { noremap = true, silent = true })
+
+        vim.keymap.set('v', '<leader>sm', function()
+            vim.fn['slime#send']('cat <<EOF > my_script.py\n')
+            -- send code under the cursor
+            local start_pos = vim.fn.getpos("v")
+            local end_pos = vim.fn.getpos(".")
+            local start_line = start_pos[2]
+            local end_line = end_pos[2]
+            local lines = vim.api.nvim_buf_get_lines(0, start_line - 1, end_line, false)
+            vim.fn['slime#send']("def main():\n")
+            lines = add_indent(lines, '    ')
+            vim.fn['slime#send'](lines)
+            vim.fn['slime#send']("\n")
+            vim.fn['slime#send']("if __name__ == '__main__':\n")
+            vim.fn['slime#send']("    main()\n")
             vim.fn['slime#send']('EOF\n')
         end, { noremap = true, silent = true })
     end,
