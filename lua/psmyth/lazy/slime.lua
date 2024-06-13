@@ -26,7 +26,7 @@ return {
                 vim.fn['slime#send_range'](start_line, end_line)
             end
 
-            return end_line
+            return start_line, end_line
         end
 
         vim.keymap.set('n', '<leader>cc', function()
@@ -35,7 +35,7 @@ return {
 
 
         vim.keymap.set('n', '<leader>ss', function()
-            local end_line = slime_send(true)
+            local _, end_line = slime_send(true)
 
             if vim.fn.search('# %%', 'nW') == 0 then
                 vim.cmd('$')
@@ -47,7 +47,7 @@ return {
 
 
         vim.keymap.set('n', '<leader>sc', function()
-            local end_line = slime_send(false)
+            local _, end_line = slime_send(false)
 
             if vim.fn.search('# %%', 'nW') == 0 then
                 vim.cmd('$')
@@ -79,6 +79,13 @@ return {
         vim.keymap.set('n', '<leader>gm', function()
             -- activate the goml conda environment
             vim.fn['slime#send']('conda activate goml\n')
+        end, { noremap = true, silent = true })
+
+        vim.keymap.set('n', '<leader>st', function()
+            -- create a my_script.py from the repl
+            vim.fn['slime#send']('my_script.py <<EOF\n')
+            slime_send(true)
+            vim.fn['slime#send']('EOF\n')
         end, { noremap = true, silent = true })
     end,
 }
