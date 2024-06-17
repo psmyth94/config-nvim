@@ -31,7 +31,7 @@ vim.keymap.set("n", "<C-f>", "<cmd>silent !tmux neww tmux-sessionizer<CR>")
 vim.keymap.set("n", "<leader><leader>", vim.lsp.buf.format)
 vim.keymap.set("n", "<leader>s", [[:%s/\v<<C-r><C-w>>//gI<Left><Left><Left>]])
 vim.keymap.set("v", "<leader>s",
-    [[y:%s/\v<C-R>=substitute(escape(@", '.*+?()[]{}|\^$#=!:/-><@%'), '\n', '\\n', 'g')<CR>/\1/g<Left><Left>]],
+    [[y:%s/\v<C-R>=substitute(escape(@", '`&.*+?()[]{}|\^$#=!:/-><@%'), '\n', '\\n', 'g')<CR>/\1/g<Left><Left>]],
     { noremap = true })
 
 -- for goml and nvim quick access

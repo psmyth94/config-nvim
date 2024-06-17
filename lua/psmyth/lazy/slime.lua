@@ -76,7 +76,7 @@ return {
             vim.fn['slime#send']('conda activate goml\n')
         end, { noremap = true, silent = true })
 
-        vim.keymap.set('n', '<leader>gm', function()
+        vim.keymap.set('n', '<leader>sg', function()
             -- activate the goml conda environment
             vim.fn['slime#send']('conda activate goml\n')
         end, { noremap = true, silent = true })
@@ -100,9 +100,9 @@ return {
         end, { noremap = true, silent = true })
 
         local function add_indent(lines, indent)
-            local new_lines = {}
+            local new_lines = ""
             for _, line in ipairs(lines) do
-                table.insert(new_lines, indent .. line)
+                new_lines = new_lines .. indent .. line .. "\n"
             end
             return new_lines
         end
@@ -114,10 +114,7 @@ return {
             local lines = vim.api.nvim_buf_get_lines(0, start_line - 1, end_line, false)
             vim.fn['slime#send']("def main():\n")
             lines = add_indent(lines, '    ')
-            vim.fn['slime#send'](lines)
-            vim.fn['slime#send']("\n")
-            vim.fn['slime#send']("if __name__ == '__main__':\n")
-            vim.fn['slime#send']("    main()\n")
+            local buf = "def main():\n" .. lines .. "\nif __name__ == '__main__':\n    main()\n"
             vim.fn['slime#send']('EOF\n')
         end, { noremap = true, silent = true })
 
@@ -129,13 +126,40 @@ return {
             local start_line = start_pos[2]
             local end_line = end_pos[2]
             local lines = vim.api.nvim_buf_get_lines(0, start_line - 1, end_line, false)
-            vim.fn['slime#send']("def main():\n")
             lines = add_indent(lines, '    ')
-            vim.fn['slime#send'](lines)
-            vim.fn['slime#send']("\n")
-            vim.fn['slime#send']("if __name__ == '__main__':\n")
-            vim.fn['slime#send']("    main()\n")
+            local buf = "def main():\n" .. lines .. "\nif __name__ == '__main__':\n    main()\n"
+            vim.fn['slime#send'](buf)
             vim.fn['slime#send']('EOF\n')
+        end, { noremap = true, silent = true })
+
+        vim.keymap.set('n', '<leader>sb', function()
+            -- creates a slurm job
+            -- prompt user for the name of the job
+            local job_name = vim.fn.input('Enter the name of the script: ')
+            if job_name == nil or job_name == "" then
+                job_name = "PS_JOB"
+            end
+            cmd = "sbatch --job-name=" ..
+                job_name ..
+                " --output=" ..
+                job_name ..
+                ".out --error=" ..
+                job_name .. ".err"
+
+            -- if its a number add a prefix
+            if tonumber(job_name:sub(1, 1)) then
+                job_name = "ps_job_" .. job_name
+            end
+
+            local cpu_count = vim.fn.input('Enter the number of cpus: ')
+            if cpu_count == nil or cpu_count == "" then
+                cpu_count = 16
+            end
+
+            local gpu_count = vim.fn.input('Enter the number of gpus: ')
+            if gpu_count == nil or gpu_count == "" then
+                gpu_count = 1
+            end
         end, { noremap = true, silent = true })
     end,
 }

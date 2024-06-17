@@ -53,8 +53,8 @@ return {
                     return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/target/debug/', 'file')
                 end,
                 cwd = '${workspaceFolder}',
-                stopOnEntry = true,
                 showDisassembly = "never",
+                stopOnEntry = false,
             },
             {
                 name = "Attach",

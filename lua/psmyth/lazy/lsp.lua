@@ -37,11 +37,11 @@ return {
         require("mason-lspconfig").setup({
             ensure_installed = {
                 "lua_ls",
-                "rust_analyzer",
                 "ruff",
                 "pyright",
                 "gopls",
                 "bashls",
+                "rust_analyzer",
                 "r_language_server",
             },
             handlers = {
@@ -50,6 +50,7 @@ return {
                         capabilities = capabilities
                     }
                 end,
+                ["rust_analyzer"] = function() end,
                 ["r_language_server"] = function()
                     require("lspconfig").r_language_server.setup {
                         capabilities = capabilities,
