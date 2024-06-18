@@ -13,6 +13,17 @@ return {
         },
         config = function()
             local neotest = require("neotest")
+            local get_python_path = function()
+                local venv_path = os.getenv("VIRTUAL_ENV")
+                local conda_path = os.getenv("CONDA_PREFIX")
+                if conda_path then
+                    return conda_path .. "/bin/python"
+                elseif venv_path then
+                    return venv_path .. "/bin/python"
+                else
+                    return "/usr/bin/python"
+                end
+            end
             neotest.setup({
                 adapters = {
                     require("neotest-vitest"),
@@ -20,10 +31,17 @@ return {
                         min_init = "./scripts/tests/minimal.vim",
                     }),
                     require("neotest-go"),
-                    require("neotest-python")({
-                        dap = { justMyCode = false },
-                        pytest_discover_instances = true,
-                    }),
+                    require("neotest-python") {
+                        dap = {
+                            request = "launch",
+                            justMyCode = false,
+                            console = "integratedTerminal",
+                            subProcess = false,
+                        },
+                        pytest_discovery = true,
+                        runner = "pytest",
+                        python = get_python_path(),
+                    },
                 }
             })
         end,
