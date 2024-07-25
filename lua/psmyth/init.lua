@@ -2,7 +2,7 @@ require("psmyth.set")
 require("psmyth.remap")
 require("psmyth.lazy_init")
 
-vim.g.python3_host_prog=vim.fn.expand("~/miniconda3/envs/genomicsml/bin/python")
+vim.g.python3_host_prog = vim.fn.expand("~/miniconda3/envs/genomicsml/bin/python")
 
 local augroup = vim.api.nvim_create_augroup
 local psmythGroup = augroup('psmyth', {})
@@ -28,11 +28,10 @@ autocmd('TextYankPost', {
             higroup = 'IncSearch',
             timeout = 40,
         })
-
     end,
 })
 
-autocmd({"BufWritePre"}, {
+autocmd({ "BufWritePre" }, {
     group = psmythGroup,
     pattern = "*",
     command = [[%s/\s\+$//e]],
@@ -72,10 +71,10 @@ if vim.fn.has("wsl") == 1 then
             },
             paste = {
                 ["+"] = (function()
-                    return vim.fn.systemlist('wl-paste --no-newline|sed -e "s/\r$//"', {''}, 1) -- '1' keeps empty lines
+                    return vim.fn.systemlist('wl-paste --no-newline|sed -e "s/\r$//"', { '' }, 1) -- '1' keeps empty lines
                 end),
                 ["*"] = (function()
-                    return vim.fn.systemlist('wl-paste --primary --no-newline|sed -e "s/\r$//"', {''}, 1)
+                    return vim.fn.systemlist('wl-paste --primary --no-newline|sed -e "s/\r$//"', { '' }, 1)
                 end),
             },
             cache_enabled = true
@@ -85,3 +84,225 @@ end
 
 vim.keymap.set("n", "<C-k>", "<cmd>cprev<CR>", { noremap = true, desc = "quickfix prev" })
 vim.keymap.set("n", "<C-j>", "<cmd>cnext<CR>", { noremap = true, desc = "quickfix next" })
+
+vim.keymap.set("n", "<leader>fd", function()
+    local start_line = vim.fn.search('"""', 'bnW')
+    local end_line = vim.fn.search('"""', 'nW') - 1
+
+    local lines = vim.api.nvim_buf_get_lines(0, start_line, end_line, false)
+    local sections = {
+        "args", "arguments", "attributes", "example", "examples", "note", "notes",
+        "raises", "references", "returns", "yields", "methods", "methods", "members",
+        "other", "param", "params", "parameters", "props", "properties",
+    }
+
+
+    -- Utility function to trim strings
+    local function trim(s)
+        return s:match("^%s*(.-)%s*$")
+    end
+
+    local function is_section(str)
+        for _, section in ipairs(sections) do
+            if str:lower() == section then
+                return true
+            end
+        end
+        return false
+    end
+
+    local parsed = { main = { None = { "" } } }
+    local current_section = "main"
+    local current_subsection = nil
+    local section_keys = { "main" }
+    local subsection_keys = {}
+
+    local base_indent = nil
+    local par_num = 1
+    for _, line in ipairs(lines) do
+        if base_indent == nil then
+            base_indent = line:match("^%s*"):len()
+        end
+        local clean_line = trim(line)
+        if clean_line == "" then
+            par_num = par_num + 1
+        else
+            if clean_line:match("^%s*.+:") then
+                par_num = 1
+                local section = trim(clean_line:match("^%s*(.+):%s*"))
+                if is_section(section) then
+                    current_section = section
+                    table.insert(section_keys, section)
+                    current_subsection = nil
+                    if not parsed[current_section] then
+                        parsed[current_section] = {}
+                    end
+                else
+                    if not subsection_keys[current_section] then
+                        subsection_keys[current_section] = {}
+                    end
+                    table.insert(subsection_keys[current_section], section)
+                    current_subsection = section
+                    if not parsed[current_section][current_subsection] then
+                        parsed[current_section][current_subsection] = { "" }
+                    end
+                    -- check if there is a description
+                    local description = trim(clean_line:match("^%s*.+:%s*(.*)"))
+                    if description then
+                        parsed[current_section][current_subsection][1] = parsed[current_section][current_subsection][1] ..
+                            description .. " "
+                    end
+                end
+            elseif current_subsection then
+                if #parsed[current_section][current_subsection] < par_num then
+                    parsed[current_section][current_subsection][par_num] = ""
+                end
+                parsed[current_section][current_subsection][par_num] = parsed[current_section][current_subsection]
+                    [par_num] ..
+                    clean_line .. " "
+            else
+                current_subsection = "None"
+                if parsed[current_section]["None"] == nil then
+                    parsed[current_section]["None"] = { "" }
+                elseif #parsed[current_section]["None"] < par_num then
+                    parsed[current_section]["None"][par_num] = ""
+                end
+                if subsection_keys[current_section] == nil then
+                    subsection_keys[current_section] = { "None" }
+                end
+                parsed[current_section]["None"][par_num] = parsed[current_section]["None"][par_num] .. clean_line .. " "
+            end
+        end
+    end
+
+    local function split_lines(str, indents)
+        local tw = vim.opt.textwidth:get()
+        local splitted_lines = {}
+        local line = indents
+
+        -- Split the string into lines so that len of each line is less than textwidth
+        for word in str:gmatch("%S+") do
+            if #line + #word + 1 <= tw then
+                line = line .. word .. " "
+            else
+                table.insert(splitted_lines, line)
+                line = indents .. word .. " "
+            end
+        end
+        table.insert(splitted_lines, line)
+        return splitted_lines
+    end
+
+    local new_lines = {}
+    local indent_count = 4
+    for _, section in ipairs(section_keys) do
+        local subsections = parsed[section]
+        if section == "main" then
+            for i, desc in ipairs(subsections["None"]) do
+                desc = trim(desc)
+                if #desc > 0 then
+                    if i > 1 then
+                        table.insert(new_lines, "")
+                    end
+                    local cleaned_description = split_lines(desc, string.rep(" ", base_indent))
+                    for _, line in ipairs(cleaned_description) do
+                        table.insert(new_lines, line)
+                    end
+                end
+            end
+        else
+            table.insert(new_lines, "")
+            table.insert(new_lines, string.rep(" ", base_indent) .. section .. ":")
+            -- convert to subsection_keys to string
+            local sstr = ""
+            for sec, subsection in pairs(subsection_keys) do
+                sstr = sstr .. "," .. sec .. ": {"
+                for _, subsec in pairs(subsection) do
+                    sstr = sstr .. subsec .. ", "
+                end
+                sstr = sstr .. "}"
+            end
+            print(sstr)
+            for _, subsection in pairs(subsection_keys[section]) do
+                local description = subsections[subsection]
+                subsection = trim(subsection)
+                if subsection == "None" then
+                    for i, desc in ipairs(description) do
+                        desc = trim(desc)
+                        if #desc > 0 then
+                            if i > 1 then
+                                table.insert(new_lines, "")
+                            end
+                            local cleaned_description = split_lines(desc, string.rep(" ", base_indent + indent_count))
+                            for _, line in ipairs(cleaned_description) do
+                                table.insert(new_lines, line)
+                            end
+                        end
+                    end
+                else
+                    local parsed_subsection = string.rep(" ", base_indent + indent_count) .. subsection .. ":"
+                    if #description == 1 and #parsed_subsection + 1 + #description[1] <= vim.opt.textwidth:get() then
+                        table.insert(new_lines, parsed_subsection .. " " .. trim(description[1]))
+                    else
+                        table.insert(new_lines, parsed_subsection)
+                        for i, desc in ipairs(description) do
+                            desc = trim(desc)
+                            if #desc > 0 then
+                                if i > 1 then
+                                    table.insert(new_lines, "")
+                                end
+                                local cleaned_description = split_lines(desc,
+                                    string.rep(" ", base_indent + indent_count * 2))
+                                for _, line in ipairs(cleaned_description) do
+                                    table.insert(new_lines, line)
+                                end
+                            end
+                        end
+                    end
+                end
+            end
+        end
+    end
+    table.insert(new_lines, "")
+    local end_col = base_indent + indent_count + 2
+    vim.api.nvim_buf_set_text(0, start_line, 0, end_line, 0, new_lines)
+end, { noremap = true, desc = "format docstring" })
+
+
+vim.keymap.set("n", "<leader>iq", function()
+    local qflist = vim.fn.getqflist()
+    local prompt = vim.fn.input('Import statement: ')
+    local one_by_one = vim.fn.input('One by one? (y/n): ')
+    local prev_file_name = nil
+    for buffnr, qf in ipairs(qflist) do
+        local continue = 'y'
+        -- use the buffnr to get the file path
+        local file_path = vim.fn.bufname(qf.bufnr)
+        if file_path ~= nil and file_path ~= prev_file_name then
+            vim.cmd('cc ' .. qf.bufnr)
+            if one_by_one == 'y' then
+                -- jump to buffnr in quickfix
+                vim.cmd('norm gg')
+                continue = vim.fn.input('Continue (' .. file_path .. ')? (y/n): ')
+            end
+            if continue == 'y' or continue == '' then
+                local file_content = vim.fn.readfile(file_path)
+                if prev_file_name ~= file_path then
+                    table.insert(file_content, 1, prompt)
+                    vim.fn.writefile(file_content, file_path)
+                    prev_file_name = file_path
+                    vim.lsp.buf.code_action({
+                        context = {
+                            only = { "source.organizeImports.ruff" },
+                        },
+                        apply = true,
+                    })
+                    if one_by_one == 'y' then
+                        vim.fn.input('Press Enter to continue')
+                    end
+                end
+            end
+        end
+        prev_file_name = file_path
+    end
+end, { noremap = true, desc = "import quickfix" })

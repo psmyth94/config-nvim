@@ -43,6 +43,7 @@ return {
                 "bashls",
                 "rust_analyzer",
                 "r_language_server",
+                "clangd",
             },
             handlers = {
                 function(server_name) -- default handler (optional)
@@ -50,7 +51,13 @@ return {
                         capabilities = capabilities
                     }
                 end,
-                ["rust_analyzer"] = function() end,
+                ["clangd"] = function()
+                    require("lspconfig").clangd.setup {
+                        capabilities = capabilities,
+                        filetypes = { "c", "cpp", "objc", "objcpp", "cuda" },
+                    }
+                end,
+                ["rust_analyzer"] = function() end, -- handled by rustaceanvim
                 ["r_language_server"] = function()
                     require("lspconfig").r_language_server.setup {
                         capabilities = capabilities,

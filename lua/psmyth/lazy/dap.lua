@@ -35,38 +35,75 @@ return {
             dapui.close()
         end
 
-        dap.adapters.codelldb = {
-            type = 'server',
-            port = "${port}",
-            executable = {
-                command = vim.fn.stdpath('data') .. '/mason/bin/codelldb',
-                args = { "--port", "${port}" },
-            }
+        dap.adapters.lldb = {
+            type = 'executable',
+            command = 'lldb-dap',
+            name = "lldb"
+        }
+
+        dap.configurations.cuda = {
+            name = "Launch",
+            type = "lldb",
+            request = "launch",
+            miDebuggerPath = "/usr/bin/cuda-gdb",
+            program = function()
+                return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/', 'file')
+            end,
+            externalConsole = false,
+            cwd = '${workspaceFolder}',
+            setupCommands = {
+                {
+                    text = '-enable-pretty-printing',
+                    description = 'enable pretty printing',
+                    ignoreFailures = false
+                },
+            },
         }
 
         dap.configurations.rust = {
-            {
-                name = "Debug",
-                type = "codelldb",
-                request = "launch",
-                program = function()
-                    return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/target/debug/', 'file')
-                end,
-                cwd = '${workspaceFolder}',
-                showDisassembly = "never",
-                stopOnEntry = false,
-            },
-            {
-                name = "Attach",
-                type = "codelldb",
-                mode = "local",
-                request = "attach",
-                processId = require("dap.utils").pick_process,
-                stopOnEntry = true,
-                showDisassembly = "never",
-            },
+            name = "Launch",
+            type = "lldb",
+            request = "launch",
+            program = function()
+                return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/target/debug/', 'file')
+            end,
+            cwd = '${workspaceFolder}',
+            stopOnEntry = false,
+            initCommands = function()
+                local rustc_sysroot = vim.fn.trim(vim.fn.system('rustc --print sysroot'))
 
-        } -- https://github.com/go-delve/delve/blob/master/Documentation/usage/dlv_dap.md
+                local script_import = 'command script import "' .. rustc_sysroot .. '/lib/rustlib/etc/lldb_lookup.py"'
+                local commands_file = rustc_sysroot .. '/lib/rustlib/etc/lldb_commands'
+
+                local commands = {}
+                local file = io.open(commands_file, 'r')
+                if file then
+                    for line in file:lines() do
+                        table.insert(commands, line)
+                    end
+                    file:close()
+                end
+                table.insert(commands, 1, script_import)
+
+                return commands
+            end,
+        }
+
+        dap.configurations.cpp = {
+            name = "Launch",
+            type = "lldb",
+            request = "launch",
+            program = function()
+                return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/', 'file')
+            end,
+            cwd = '${workspaceFolder}',
+            stopOnEntry = false,
+        }
+
+        dap.configurations.c = dap.configurations.cpp
+
+        -- https://github.com/go-delve/delve/blob/master/Documentation/usage/dlv_dap.md
+
         require('dap-go').setup()
         dap.adapters.python = {
             type = 'executable',
