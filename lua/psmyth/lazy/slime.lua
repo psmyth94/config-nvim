@@ -185,9 +185,12 @@ python3]]
             local start_line = 0
             local end_line = vim.fn.line('$')
             local lines = vim.api.nvim_buf_get_lines(0, start_line, end_line, false)
-            lines = add_indent(lines, '    ')
-            local buf = "def main():\n" .. lines .. "\nif __name__ == '__main__':\n    main()\n"
-            vim.fn['slime#send'](buf)
+            local wrap_lines = vim.fn.input('Wrap the code in a main function? ([y]/n): ')
+            if wrap_lines == nil or wrap_lines == "" or wrap_lines == "y" then
+                lines = add_indent(lines, '    ')
+                lines = "def main():\n" .. lines .. "\nif __name__ == '__main__':\n    main()\n"
+            end
+            vim.fn['slime#send'](lines)
             vim.fn['slime#send']('EOF\n')
             vim.fn['slime#send']('cat <<EOF > ' .. file_name .. '.sh\n')
             vim.fn['slime#send'](bash_script .. "\n")
@@ -203,9 +206,12 @@ python3]]
             local start_line = start_pos[2]
             local end_line = end_pos[2]
             local lines = vim.api.nvim_buf_get_lines(0, start_line - 1, end_line, false)
-            lines = add_indent(lines, '    ')
-            local buf = "def main():\n" .. lines .. "\nif __name__ == '__main__':\n    main()\n"
-            vim.fn['slime#send'](buf)
+            local wrap_lines = vim.fn.input('Wrap the code in a main function? ([y]/n): ')
+            if wrap_lines == nil or wrap_lines == "" or wrap_lines == "y" then
+                lines = add_indent(lines, '    ')
+                lines = "def main():\n" .. lines .. "\nif __name__ == '__main__':\n    main()\n"
+            end
+            vim.fn['slime#send'](lines)
             vim.fn['slime#send']('EOF\n')
             vim.fn['slime#send']('cat <<EOF > ' .. file_name .. '.sh\n')
             vim.fn['slime#send'](bash_script .. "\n")
