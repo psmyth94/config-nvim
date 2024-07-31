@@ -80,6 +80,23 @@ if vim.fn.has("wsl") == 1 then
             cache_enabled = true
         }
     end
+else
+    if vim.fn.executable("xclip") == 0 then
+        print("xclip not found, clipboard integration won't work")
+    else
+        vim.g.clipboard = {
+            name = "xclip",
+            copy = {
+                ["+"] = 'xclip -selection clipboard',
+                ["*"] = 'xclip -selection primary',
+            },
+            paste = {
+                ["+"] = 'xclip -selection clipboard -o',
+                ["*"] = 'xclip -selection primary -o',
+            },
+            cache_enabled = true
+        }
+    end
 end
 
 vim.keymap.set("n", "<C-k>", "<cmd>cprev<CR>", { noremap = true, desc = "quickfix prev" })
