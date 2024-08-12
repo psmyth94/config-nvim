@@ -189,6 +189,8 @@ python3]]
             if wrap_lines == nil or wrap_lines == "" or wrap_lines == "y" then
                 lines = add_indent(lines, '    ')
                 lines = "def main():\n" .. lines .. "\nif __name__ == '__main__':\n    main()\n"
+            else
+                lines = add_indent(lines, '')
             end
             vim.fn['slime#send'](lines)
             vim.fn['slime#send']('EOF\n')
@@ -210,6 +212,8 @@ python3]]
             if wrap_lines == nil or wrap_lines == "" or wrap_lines == "y" then
                 lines = add_indent(lines, '    ')
                 lines = "def main():\n" .. lines .. "\nif __name__ == '__main__':\n    main()\n"
+            else
+                lines = add_indent(lines, '')
             end
             vim.fn['slime#send'](lines)
             vim.fn['slime#send']('EOF\n')
