@@ -55,6 +55,10 @@ return {
             { "<leader>tN", mode = "n", "<cmd>lua require('neotest').run.run({strategy = 'dap'})<cr>",                     desc = "Debug Nearest" },
             { "<leader>to", mode = "n", "<cmd>lua require('neotest').output.open({ enter = true })<cr>",                   desc = "Output" },
             { "<leader>ts", mode = "n", "<cmd>lua require('neotest').run.stop()<cr>",                                      desc = "Stop" },
+            { "<leader>tr", mode = "n", "<cmd>lua require('neotest').run.run(vim.fn.getcwd())<cr>",                        desc = "Run All" },
+            { "<leader>tR", mode = "n", "<cmd>lua require('neotest').run.run(vim.fn.getcwd(), {strategy = 'dap'})<cr>",    desc = "Debug Run All" },
+            { "<leader>tO", mode = "n", "<cmd>lua require('neotest').output.open()<cr>",                                   desc = "Open" },
+            { "<leader>tT", mode = "n", "<cmd>lua require('neotest').summary.open()<cr>",                                  desc = "Toggle" },
             { "<leader>tS", mode = "n", "<cmd>lua require('neotest').summary.toggle()<cr>",                                desc = "Summary" },
         },
     }
