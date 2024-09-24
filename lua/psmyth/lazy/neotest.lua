@@ -32,12 +32,8 @@ return {
                     }),
                     require("neotest-go"),
                     require("neotest-python") {
-                        dap = {
-                            request = "launch",
-                            justMyCode = false,
-                            console = "integratedTerminal",
-                            subProcess = false,
-                        },
+                        dap = { justMyCode = false },
+                        args = { "--log-level", "DEBUG" },
                         pytest_discovery = true,
                         runner = "pytest",
                         python = get_python_path(),

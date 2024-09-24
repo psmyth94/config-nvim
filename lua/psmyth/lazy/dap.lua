@@ -107,6 +107,7 @@ return {
         require('dap-go').setup()
         dap.adapters.python = {
             type = 'executable',
+            justMyCode = false,
             command = 'python',
             args = { '-m', 'debugpy.adapter' },
         }
@@ -114,6 +115,7 @@ return {
             {
                 type = 'python',
                 request = 'launch',
+                justMyCode = false,
                 name = 'Launch file',
                 program = '${file}',
                 pythonPath = function()
