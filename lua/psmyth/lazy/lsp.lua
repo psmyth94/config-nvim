@@ -141,21 +141,15 @@ return {
                 end,
                 ["pyright"] = function()
                     require('lspconfig').pyright.setup {
-                        handlers = {
-                            ["textDocument/publishDiagnostics"] = function() end,
-                        },
-                        on_attach = function(client, _)
-                            client.server_capabilities.codeActionProvider = false
-                        end,
                         settings = {
                             pyright = {
+                                -- Using Ruff's import organizer
                                 disableOrganizeImports = true,
                             },
                             python = {
                                 analysis = {
-                                    autoSearchPaths = true,
-                                    typeCheckingMode = "basic",
-                                    useLibraryCodeForTypes = true,
+                                    -- Ignore all files for analysis to exclusively use Ruff for linting
+                                    ignore = { '*' },
                                 },
                             },
                         },
