@@ -5,22 +5,10 @@ Run the following command to get the requirements:
 ```bash
 # the essentials
 sudo add-apt-repository ppa:neovim-ppa/unstable
-sudo apt update -y
-apt install build-essential -y
-sudo apt install neovim
-# for clipboard support
-sudo apt install xclip -y
-# for greping
-sudo apt install ripgrep -y
-# for multiple terminals
-sudo apt install tmux -y
-# version control
-sudo apt install git -y
-# debuggers
-sudo apt install lldb -y
 # golang
 sudo add-apt-repository ppa:longsleep/golang-backports
-sudo apt install golang-go -y
+sudo apt update -y
+sudo apt install build-essential neovim wl-clipboard ripgrep tmux git lldb golang-go luarocks python3-pip -y
 # rust
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 # npm and nodejs
@@ -31,9 +19,9 @@ curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
 For installing miniconda
 ```bash
 # miniconda
-wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
-chmod +x Miniconda3-latest-Linux-x86_64.sh
-./Miniconda3-latest-Linux-x86_64.sh
+wget https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge-pypy3-Linux-x86_64.sh
+chmod +x Miniforge-pypy3-Linux-x86_64.sh
+./Miniforge-pypy3-Linux-x86_64.sh
 ```
 
 Once everything is installed, run the following commands:
