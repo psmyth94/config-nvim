@@ -30,15 +30,18 @@ vim.keymap.set("i", "<C-c>", "<Esc>")
 vim.keymap.set("n", "Q", "<nop>")
 vim.keymap.set("n", "<C-f>", "<cmd>silent !tmux neww tmux-sessionizer<CR>")
 vim.keymap.set("n", "<leader>s", [[:%s/\v<<C-r><C-w>>//gI<Left><Left><Left>]])
-vim.keymap.set("v", "<leader>s",
-    [[y:%s/\v<C-R>=substitute(escape(@", '`&.*+?()[]{}|\^$#=!:/-><@%'), '\n', '\\n', 'g')<CR>/\1/g<Left><Left>]],
-    { noremap = true })
+vim.keymap.set(
+	"v",
+	"<leader>s",
+	[[y:%s/\v<C-R>=substitute(escape(@", '`&.*+?()[]{}|\^$#=!:/-><@%'), '\n', '\\n', 'g')<CR>/\1/g<Left><Left>]],
+	{ noremap = true }
+)
 
 -- for goml and nvim quick access
 vim.keymap.set("n", "<leader>nv", "<cmd>Ex ~/.config/nvim<CR>")
 vim.keymap.set("n", "<leader>cnv", "<cmd>cd ~/.config/nvim<CR>")
-vim.keymap.set("n", "<leader>go", "<cmd>Ex ~/genomicsml<CR>")
-vim.keymap.set("n", "<leader>cgo", "<cmd>cd ~/genomicsml<CR>")
+vim.keymap.set("n", "<leader>go", "<cmd>Ex ~/goml<CR>")
+vim.keymap.set("n", "<leader>cgo", "<cmd>cd ~/goml<CR>")
 
 -- Visual --
 -- Stay in indent mode
