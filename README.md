@@ -67,7 +67,7 @@ Finally, install the following:
 # Install the essentials with Conda
 conda create -n neovim python=3.11
 conda activate neovim
-conda install -c conda-forge cxx-compiler make cmake xclip ripgrep tmux git lldb go rust nodejs
+conda install -c conda-forge cxx-compiler make cmake ripgrep git lldb go rust nodejs luarocks
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
 ```
 
