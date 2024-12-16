@@ -20,7 +20,7 @@ For installing miniconda
 
 ```bash
 # miniconda
-wget https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge-pypy3-Linux-x86_64.sh
+wget https://github.com/conda-forge/miniforge/releases/latest/Miniforge3-Linux-x86_64.sh
 chmod +x Miniforge-pypy3-Linux-x86_64.sh
 ./Miniforge-pypy3-Linux-x86_64.sh
 ```
