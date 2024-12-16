@@ -11,7 +11,7 @@ sudo apt update -y
 sudo apt install \
    build-essential \
    neovim \
-   wl-clipboard \
+   xclip \
    ripgrep \
    tmux \
    git \
