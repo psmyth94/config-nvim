@@ -8,7 +8,20 @@ sudo add-apt-repository ppa:neovim-ppa/unstable
 # golang
 sudo add-apt-repository ppa:longsleep/golang-backports
 sudo apt update -y
-sudo apt install build-essential neovim wl-clipboard ripgrep tmux git lldb golang-go luarocks python3-pip -y
+sudo apt install \
+   build-essential \
+   neovim \
+   wl-clipboard \
+   ripgrep \
+   tmux \
+   git \
+   lldb \
+   golang-go \
+   luarocks \
+   python3-pip \
+   libmagickwand-dev \
+   w3m \
+   -y
 # rust
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 # npm and nodejs
