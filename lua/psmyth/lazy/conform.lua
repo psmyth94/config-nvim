@@ -32,6 +32,7 @@ return {
 			markdown = { "prettierd", "injected" },
 			json = { "jq" },
 			rust = { "rustfmt", lsp_format = "fallback" },
+			sql = { "sqlfluff" },
 		},
 		-- Set default options
 		default_format_opts = {
@@ -56,6 +57,7 @@ return {
 						javascript = "js",
 						typescript = "ts",
 						r = "r",
+						sql = "sql",
 					},
 				},
 			},

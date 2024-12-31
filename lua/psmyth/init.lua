@@ -95,8 +95,8 @@ else
 			["*"] = "xclip -selection primary",
 		},
 		paste = {
-			["+"] = "xclip -selection clipboard -o -t TARGETS",
-			["*"] = "xclip -selection primary -o -t TARGETS",
+			["+"] = "xclip -selection clipboard -o",
+			["*"] = "xclip -selection primary -o",
 		},
 		cache_enabled = true,
 	}

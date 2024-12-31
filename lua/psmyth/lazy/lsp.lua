@@ -36,6 +36,7 @@ return {
 				"goimports",
 				"xmlformatter",
 				"yamlfmt",
+				"sqlfluff",
 			},
 			auto_update = true,
 			run_on_start = true,
