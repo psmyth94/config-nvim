@@ -19,6 +19,7 @@ sudo apt install \
    golang-go \
    luarocks \
    python3-pip \
+   python3-venv \
    libmagickwand-dev \
    w3m \
    -y
