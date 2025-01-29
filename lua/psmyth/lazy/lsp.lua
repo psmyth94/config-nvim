@@ -33,7 +33,7 @@ return {
 				"codelldb",
 				"stylua",
 				"shfmt",
-				"goimports",
+				-- "goimports",
 				"xmlformatter",
 				"yamlfmt",
 				"sqlfluff",
@@ -47,11 +47,12 @@ return {
 				"lua_ls",
 				"ruff",
 				"pyright",
-				"gopls",
+				-- "gopls",
 				"bashls",
-				"rust_analyzer",
-				"r_language_server",
+				-- "rust_analyzer",
+				-- "r_language_server",
 				"clangd",
+				"dockerls",
 			},
 			handlers = {
 				function(server_name) -- default handler (optional)
@@ -65,20 +66,20 @@ return {
 						filetypes = { "c", "cpp", "objc", "objcpp", "cuda" },
 					})
 				end,
-				["rust_analyzer"] = function() end, -- handled by rustaceanvim
-				["r_language_server"] = function()
-					require("lspconfig").r_language_server.setup({
-						capabilities = capabilities,
-						cmd = {
-							"R",
-							"--vanilla",
-							"--slave",
-							"-e",
-							"options(languageserver.formatting_style = function(options) { styler::tidyverse_style(strict=TRUE, indent_by=2)}); languageserver::run()",
-						},
-						filetypes = { "r" },
-					})
-				end,
+				-- ["rust_analyzer"] = function() end, -- handled by rustaceanvim
+				-- ["r_language_server"] = function()
+				-- 	require("lspconfig").r_language_server.setup({
+				-- 		capabilities = capabilities,
+				-- 		cmd = {
+				-- 			"R",
+				-- 			"--vanilla",
+				-- 			"--slave",
+				-- 			"-e",
+				-- 			"options(languageserver.formatting_style = function(options) { styler::tidyverse_style(strict=TRUE, indent_by=2)}); languageserver::run()",
+				-- 		},
+				-- 		filetypes = { "r" },
+				-- 	})
+				-- end,
 				["bashls"] = function()
 					require("lspconfig").bashls.setup({
 						capabilities = capabilities,
@@ -100,19 +101,19 @@ return {
 						},
 					})
 				end,
-				["gopls"] = function()
-					require("lspconfig").gopls.setup({
-						capabilities = capabilities,
-						settings = {
-							gopls = {
-								analyses = {
-									unusedparams = true,
-								},
-								staticcheck = true,
-							},
-						},
-					})
-				end,
+				-- ["gopls"] = function()
+				-- 	require("lspconfig").gopls.setup({
+				-- 		capabilities = capabilities,
+				-- 		settings = {
+				-- 			gopls = {
+				-- 				analyses = {
+				-- 					unusedparams = true,
+				-- 				},
+				-- 				staticcheck = true,
+				-- 			},
+				-- 		},
+				-- 	})
+				-- end,
 				["ruff"] = function()
 					require("lspconfig").ruff.setup({
 						on_attach = function(client, bufnr)

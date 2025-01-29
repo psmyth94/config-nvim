@@ -25,6 +25,7 @@ return {
 			typescriptreact = { "prettierd" },
 			vue = { "prettierd" },
 			css = { "prettierd" },
+			cs = { "uncrustify" },
 			go = { "goimports", "gofmt" },
 			bash = { "shfmt" },
 			yaml = { "yamlfmt" },
@@ -58,6 +59,7 @@ return {
 						typescript = "ts",
 						r = "r",
 						sql = "sql",
+						cs = "cs",
 					},
 				},
 			},
@@ -69,5 +71,6 @@ return {
 	end,
 	dependencies = {
 		{ "pamoller/xmlformatter" },
+		{ "uncrustify/uncrustify" },
 	},
 }
