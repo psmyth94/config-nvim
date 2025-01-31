@@ -8,7 +8,21 @@ sudo add-apt-repository ppa:neovim-ppa/unstable
 # golang
 sudo add-apt-repository ppa:longsleep/golang-backports
 sudo apt update -y
-sudo apt install build-essential neovim wl-clipboard ripgrep tmux git lldb golang-go luarocks python3-pip -y
+sudo apt install \
+   build-essential \
+   neovim \
+   xclip \
+   ripgrep \
+   tmux \
+   git \
+   lldb \
+   golang-go \
+   luarocks \
+   python3-pip \
+   python3-venv \
+   libmagickwand-dev \
+   w3m \
+   -y
 # rust
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 # npm and nodejs
@@ -20,7 +34,7 @@ For installing miniconda
 
 ```bash
 # miniconda
-wget https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge-pypy3-Linux-x86_64.sh
+wget https://github.com/conda-forge/miniforge/releases/latest/Miniforge3-Linux-x86_64.sh
 chmod +x Miniforge-pypy3-Linux-x86_64.sh
 ./Miniforge-pypy3-Linux-x86_64.sh
 ```
@@ -67,7 +81,7 @@ Finally, install the following:
 # Install the essentials with Conda
 conda create -n neovim python=3.11
 conda activate neovim
-conda install -c conda-forge cxx-compiler make cmake xclip ripgrep tmux git lldb go rust nodejs
+conda install -c conda-forge cxx-compiler make cmake ripgrep git lldb go rust nodejs luarocks
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
 ```
 
