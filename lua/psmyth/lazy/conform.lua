@@ -25,6 +25,7 @@ return {
 			typescriptreact = { "prettierd" },
 			vue = { "prettierd" },
 			css = { "prettierd" },
+			cs = { "omnisharp" },
 			go = { "goimports", "gofmt" },
 			bash = { "shfmt" },
 			yaml = { "yamlfmt" },
@@ -38,8 +39,13 @@ return {
 			lsp_format = "fallback",
 		},
 		-- Set up format-on-save
-		format_on_save = { timeout_ms = 500 },
+		-- format_on_save = { timeout_ms = 500 },
 		formatters = {
+			omnisharp = {
+				exe = "omnisharp",
+				args = { "--format", "--workspace", vim.fn.getcwd() },
+				stdin = false,
+			},
 			injected = {
 				options = {
 					-- Set to true to ignore errors
@@ -55,6 +61,8 @@ return {
 						rust = "rs",
 						javascript = "js",
 						typescript = "ts",
+                        typescriptreact = "tsx",
+                        cs = "cs",
 						r = "r",
 					},
 				},

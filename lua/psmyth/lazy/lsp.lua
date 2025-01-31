@@ -51,6 +51,8 @@ return {
 				"rust_analyzer",
 				"r_language_server",
 				"clangd",
+                "ts_ls",
+
 			},
 			handlers = {
 				function(server_name) -- default handler (optional)
@@ -99,6 +101,11 @@ return {
 						},
 					})
 				end,
+                ["ts_ls"] = function()
+                    require("lspconfig").ts_ls.setup({
+                        capabilities = capabilities,
+                    })
+                end,
 				["gopls"] = function()
 					require("lspconfig").gopls.setup({
 						capabilities = capabilities,
