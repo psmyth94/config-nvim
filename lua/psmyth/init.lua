@@ -95,8 +95,8 @@ else
 			["*"] = "xclip -selection primary",
 		},
 		paste = {
-			["+"] = "xclip -selection clipboard -o -t TARGETS",
-			["*"] = "xclip -selection primary -o -t TARGETS",
+			["+"] = "xclip -selection clipboard -o -t UTF8_STRING",
+			["*"] = "xclip -selection primary -o -t UTF8_STRING",
 		},
 		cache_enabled = true,
 	}
@@ -105,7 +105,7 @@ end
 vim.keymap.set("n", "<C-k>", "<cmd>cprev<CR>", { noremap = true, desc = "quickfix prev" })
 vim.keymap.set("n", "<C-j>", "<cmd>cnext<CR>", { noremap = true, desc = "quickfix next" })
 
-vim.keymap.set("n", "<leader>fd", function()
+vim.keymap.set("n", "<leader>fD", function()
 	-- Utility function to trim strings
 	local function trim(s)
 		return s:match("^%s*(.-)%s*$")

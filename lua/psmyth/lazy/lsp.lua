@@ -51,13 +51,15 @@ return {
 				"rust_analyzer",
 				"r_language_server",
 				"clangd",
-                "ts_ls",
-
+				"ts_ls",
 			},
 			handlers = {
-				function(server_name) -- default handler (optional)
+				function(server_name)
 					require("lspconfig")[server_name].setup({
 						capabilities = capabilities,
+						on_attach = function(client, bufnr) -- Attach the following to every buffer.
+							require("workspace-diagnostics").populate_workspace_diagnostics(client, bufnr) -- Populate Workspace-Diagnostics plugin information.
+						end,
 					})
 				end,
 				["clangd"] = function()
@@ -101,11 +103,14 @@ return {
 						},
 					})
 				end,
-                ["ts_ls"] = function()
-                    require("lspconfig").ts_ls.setup({
-                        capabilities = capabilities,
-                    })
-                end,
+				["ts_ls"] = function()
+					require("lspconfig").ts_ls.setup({
+						capabilities = capabilities,
+						on_attach = function(client, bufnr)
+							require("workspace-diagnostics").populate_workspace_diagnostics(client, bufnr)
+						end,
+					})
+				end,
 				["gopls"] = function()
 					require("lspconfig").gopls.setup({
 						capabilities = capabilities,
