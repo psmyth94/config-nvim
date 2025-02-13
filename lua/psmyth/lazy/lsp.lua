@@ -53,6 +53,7 @@ return {
 				-- "r_language_server",
 				"clangd",
 				"dockerls",
+				"ts_ls",
 			},
 			handlers = {
 				function(server_name) -- default handler (optional)
@@ -101,19 +102,24 @@ return {
 						},
 					})
 				end,
-				-- ["gopls"] = function()
-				-- 	require("lspconfig").gopls.setup({
-				-- 		capabilities = capabilities,
-				-- 		settings = {
-				-- 			gopls = {
-				-- 				analyses = {
-				-- 					unusedparams = true,
-				-- 				},
-				-- 				staticcheck = true,
-				-- 			},
-				-- 		},
-				-- 	})
-				-- end,
+				["ts_ls"] = function()
+					require("lspconfig").ts_ls.setup({
+						capabilities = capabilities,
+					})
+				end,
+				["gopls"] = function()
+					require("lspconfig").gopls.setup({
+						capabilities = capabilities,
+						settings = {
+							gopls = {
+								analyses = {
+									unusedparams = true,
+								},
+								staticcheck = true,
+							},
+						},
+					})
+				end,
 				["ruff"] = function()
 					require("lspconfig").ruff.setup({
 						on_attach = function(client, bufnr)

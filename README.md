@@ -11,7 +11,7 @@ sudo apt update -y
 sudo apt install \
    build-essential \
    neovim \
-   wl-clipboard \
+   xclip \
    ripgrep \
    tmux \
    git \
@@ -19,6 +19,7 @@ sudo apt install \
    golang-go \
    luarocks \
    python3-pip \
+   python3-venv \
    libmagickwand-dev \
    w3m \
    -y
