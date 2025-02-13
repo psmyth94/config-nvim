@@ -1,5 +1,15 @@
 Run the following command to get the requirements:
 
+## Quick Installation
+Clone the repository and run the following command:
+```bash
+git clone git@github.com:psmyth94/config-nvim.git ~/.config/nvim
+cd ~/.config/nvim
+chmod +x install.sh
+./install.sh
+```
+
+## Manual Installation
 ### with `sudo`:
 
 ```bash

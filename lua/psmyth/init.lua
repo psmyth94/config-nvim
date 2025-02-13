@@ -85,19 +85,19 @@ vim.g.netrw_banner = 0
 vim.g.netrw_winsize = 25
 
 vim.opt.clipboard = "unnamedplus"
-if vim.fn.has('wsl') == 1 then
-    vim.g.clipboard = {
-        name = 'WslClipboard',
-        copy = {
-            ['+'] = 'clip.exe',
-            ['*'] = 'clip.exe',
-        },
-        paste = {
-            ['+'] = 'powershell.exe -c [Console]::Out.Write($(Get-Clipboard -Raw).tostring().replace("`r", ""))',
-            ['*'] = 'powershell.exe -c [Console]::Out.Write($(Get-Clipboard -Raw).tostring().replace("`r", ""))',
-        },
-        cache_enabled = 0,
-    }
+if vim.fn.has("wsl") == 1 then
+	vim.g.clipboard = {
+		name = "win32yank-wsl",
+		copy = {
+			["+"] = "win32yank.exe -i --crlf",
+			["*"] = "win32yank.exe -i --crlf",
+		},
+		paste = {
+			["+"] = "win32yank.exe -o --lf",
+			["*"] = "win32yank.exe -o --lf",
+		},
+		cache_enabled = true,
+	}
 elseif vim.fn.executable("xclip") == 0 then
 	print("xclip not found, clipboard integration won't work")
 else
