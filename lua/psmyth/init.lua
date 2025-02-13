@@ -85,7 +85,20 @@ vim.g.netrw_banner = 0
 vim.g.netrw_winsize = 25
 
 vim.opt.clipboard = "unnamedplus"
-if vim.fn.executable("xclip") == 0 then
+if vim.fn.has('wsl') == 1 then
+    vim.g.clipboard = {
+        name = 'WslClipboard',
+        copy = {
+            ['+'] = 'clip.exe',
+            ['*'] = 'clip.exe',
+        },
+        paste = {
+            ['+'] = 'powershell.exe -c [Console]::Out.Write($(Get-Clipboard -Raw).tostring().replace("`r", ""))',
+            ['*'] = 'powershell.exe -c [Console]::Out.Write($(Get-Clipboard -Raw).tostring().replace("`r", ""))',
+        },
+        cache_enabled = 0,
+    }
+elseif vim.fn.executable("xclip") == 0 then
 	print("xclip not found, clipboard integration won't work")
 else
 	vim.g.clipboard = {
@@ -95,8 +108,8 @@ else
 			["*"] = "xclip -selection primary",
 		},
 		paste = {
-			["+"] = "xclip -selection clipboard -o -t UTF8_STRING",
-			["*"] = "xclip -selection primary -o -t UTF8_STRING",
+			["+"] = "xclip -selection clipboard -o",
+			["*"] = "xclip -selection primary -o",
 		},
 		cache_enabled = true,
 	}

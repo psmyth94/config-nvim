@@ -25,7 +25,7 @@ return {
 			typescriptreact = { "prettierd" },
 			vue = { "prettierd" },
 			css = { "prettierd" },
-			cs = { "omnisharp" },
+			cs = { "uncrustify" },
 			go = { "goimports", "gofmt" },
 			bash = { "shfmt" },
 			yaml = { "yamlfmt" },
@@ -33,6 +33,7 @@ return {
 			markdown = { "prettierd", "injected" },
 			json = { "jq" },
 			rust = { "rustfmt", lsp_format = "fallback" },
+			sql = { "sqlfluff" },
 		},
 		-- Set default options
 		default_format_opts = {
@@ -61,9 +62,11 @@ return {
 						rust = "rs",
 						javascript = "js",
 						typescript = "ts",
-                        typescriptreact = "tsx",
-                        cs = "cs",
+						typescriptreact = "tsx",
+						cs = "cs",
 						r = "r",
+						sql = "sql",
+						cs = "cs",
 					},
 				},
 			},
@@ -75,5 +78,6 @@ return {
 	end,
 	dependencies = {
 		{ "pamoller/xmlformatter" },
+		{ "uncrustify/uncrustify" },
 	},
 }
