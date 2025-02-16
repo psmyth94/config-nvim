@@ -5,12 +5,11 @@
 -- removed checking for extras
 local LazyUtil = require 'lazy.core.util'
 
----@class psvim.util: PSUtilCore
+---@class psvim.util: PSVimUtil
 ---@field config PSVimConfig
 ---@field ui psvim.util.ui
 ---@field lsp psvim.util.lsp
 ---@field root psvim.util.root
----@field terminal psvim.util.terminal
 ---@field format psvim.util.format
 ---@field plugin psvim.util.plugin
 ---@field inject psvim.util.inject

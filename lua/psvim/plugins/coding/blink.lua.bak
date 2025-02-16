@@ -102,8 +102,11 @@ return {
         end
       end
 
+      PSVim.warn 'configure blink.cmp'
+      -- set enabled providers
       -- add ai_accept to <Tab> key
       if not opts.keymap['<Tab>'] then
+        PSVim.warn 'configure blink.cmp'
         if opts.keymap.preset == 'super-tab' then -- super-tab
           opts.keymap['<Tab>'] = {
             require('blink.cmp.keymap.presets')['super-tab']['<Tab>'][1],
