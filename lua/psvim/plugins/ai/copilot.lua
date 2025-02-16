@@ -61,7 +61,6 @@ return {
 
   vim.g.ai_cmp
       and {
-        -- copilot cmp source
         {
           'hrsh7th/nvim-cmp',
           optional = true,
