@@ -14,7 +14,7 @@ vim.g.snacks_animate = false
 -- picker to use.
 -- Can be one of: telescope, fzf
 -- Leave it to "auto" to automatically use the picker
-vim.g.picker = 'auto'
+vim.g.psvim_picker = 'auto'
 
 -- completion engine to use.
 -- Can be one of: nvim-cmp, blink.cmp
@@ -23,7 +23,7 @@ vim.g.cmp = 'auto'
 
 -- if the completion engine supports the AI source,
 -- use that instead of inline suggestions
-vim.g.ai_cmp = false
+vim.g.ai_cmp = true
 
 -- root dir detection
 -- Each entry can be:

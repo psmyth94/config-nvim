@@ -1,3 +1,9 @@
+if psvim_docs then
+  -- In case you don't want to use `:LazyExtras`,
+  -- then you need to set the option below.
+  vim.g.psvim_picker = 'snacks'
+end
+
 ---@module 'snacks'
 
 ---@type PSPicker
@@ -149,20 +155,6 @@ return {
       { "<leader>st", function() Snacks.picker.todo_comments() end, desc = "Todo" },
       { "<leader>sT", function () Snacks.picker.todo_comments({ keywords = { "TODO", "FIX", "FIXME" } }) end, desc = "Todo/Fix/Fixme" },
     },
-  },
-  {
-    'echasnovski/mini.starter',
-    optional = true,
-    opts = function(_, opts)
-      local items = {
-        {
-          name = 'Projects',
-          action = [[lua Snacks.picker.projects()]],
-          section = string.rep(' ', 22) .. 'Telescope',
-        },
-      }
-      vim.list_extend(opts.items, items)
-    end,
   },
   {
     'folke/flash.nvim',

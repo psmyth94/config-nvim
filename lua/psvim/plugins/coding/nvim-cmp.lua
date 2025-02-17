@@ -4,7 +4,6 @@ return {
     enabled = false,
     optional = true,
   },
-
   -- Setup nvim-cmp
   {
     'hrsh7th/nvim-cmp',
@@ -15,15 +14,6 @@ return {
       'hrsh7th/cmp-buffer',
       'hrsh7th/cmp-path',
     },
-    -- Not all LSP servers add brackets when completing a function.
-    -- To better deal with this, PSVim adds a custom option to cmp,
-    -- that you can configure. For example:
-    --
-    -- ```lua
-    -- opts = {
-    --   auto_brackets = { "python" }
-    -- }
-    -- ```
     opts = function()
       vim.api.nvim_set_hl(0, 'CmpGhostText', { link = 'Comment', default = true })
       local cmp = require 'cmp'
@@ -89,7 +79,7 @@ return {
         sorting = defaults.sorting,
       }
     end,
-    main = 'lazyvim.util.cmp',
+    main = 'psvim.util.cmp',
   },
 
   -- snippets

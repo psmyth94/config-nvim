@@ -1,4 +1,5 @@
 return {
+  recommended = true,
   -- copilot
   {
     'zbirenbaum/copilot.lua',
@@ -7,9 +8,9 @@ return {
     event = 'BufReadPost',
     opts = {
       suggestion = {
-        enabled = true,
+        enabled = not vim.g.ai_cmp,
         auto_trigger = true,
-        hide_during_completion = false,
+        hide_during_completion = vim.g.ai_cmp,
         keymap = {
           accept = false, -- handled by nvim-cmp / blink.cmp
           next = '<M-]>',
@@ -43,6 +44,8 @@ return {
     optional = true,
     event = 'VeryLazy',
     opts = function(_, opts)
+      opts.sections = opts.sections or {}
+      opts.sections.lualine_x = opts.sections.lualine_x or {}
       table.insert(
         opts.sections.lualine_x,
         2,
@@ -57,40 +60,61 @@ return {
     end,
   },
 
-  {
-    {
-      'hrsh7th/nvim-cmp',
-      optional = true,
-      dependencies = { -- this will only be evaluated if nvim-cmp is enabled
+  vim.g.ai_cmp
+      and {
+        -- copilot cmp source
         {
-          'zbirenbaum/copilot-cmp',
-          opts = {},
-          config = function(_, opts)
-            local copilot_cmp = require 'copilot_cmp'
-            copilot_cmp.setup(opts)
-            -- attach cmp source whenever copilot attaches
-            -- fixes lazy-loading issues with the copilot cmp source
-            PSVim.lsp.on_attach(function()
-              copilot_cmp._on_insert_enter {}
-            end, 'copilot')
-          end,
-          specs = {
+          'hrsh7th/nvim-cmp',
+          optional = true,
+          dependencies = { -- this will only be evaluated if nvim-cmp is enabled
             {
-              'hrsh7th/nvim-cmp',
-              optional = true,
-              ---@param opts cmp.ConfigSchema
-              opts = function(_, opts)
-                opts.sources = opts.sources or {}
-                table.insert(opts.sources, 1, {
-                  name = 'copilot',
-                  group_index = 1,
-                  priority = 100,
-                })
+              'zbirenbaum/copilot-cmp',
+              opts = {},
+              config = function(_, opts)
+                local copilot_cmp = require 'copilot_cmp'
+                copilot_cmp.setup(opts)
+                -- attach cmp source whenever copilot attaches
+                -- fixes lazy-loading issues with the copilot cmp source
+                PSVim.lsp.on_attach(function()
+                  copilot_cmp._on_insert_enter {}
+                end, 'copilot')
               end,
+              specs = {
+                {
+                  'hrsh7th/nvim-cmp',
+                  optional = true,
+                  ---@param opts cmp.ConfigSchema
+                  opts = function(_, opts)
+                    table.insert(opts.sources, 1, {
+                      name = 'copilot',
+                      group_index = 1,
+                      priority = 100,
+                    })
+                  end,
+                },
+              },
             },
           },
         },
-      },
-    },
-  },
+        {
+          'saghen/blink.cmp',
+          optional = true,
+          dependencies = { 'giuxtaposition/blink-cmp-copilot' },
+          opts = {
+            sources = {
+              default = { 'copilot' },
+              providers = {
+                copilot = {
+                  name = 'copilot',
+                  module = 'blink-cmp-copilot',
+                  kind = 'Copilot',
+                  score_offset = 100,
+                  async = true,
+                },
+              },
+            },
+          },
+        },
+      }
+    or nil,
 }

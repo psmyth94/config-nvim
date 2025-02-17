@@ -1,7 +1,7 @@
 -- Adapted from LazyVim/LazyVim
 -- Copyright (c) 2025, LazyVim
 -- License: Apache-2.0
----@class lazyvim.util.terminal
+---@class psvim.util.terminal
 local M = {}
 
 ---@param shell? string
@@ -9,14 +9,14 @@ function M.setup(shell)
   vim.o.shell = shell or vim.o.shell
 
   -- Special handling for pwsh
-  if shell == "pwsh" or shell == "powershell" then
+  if shell == 'pwsh' or shell == 'powershell' then
     -- Check if 'pwsh' is executable and set the shell accordingly
-    if vim.fn.executable("pwsh") == 1 then
-      vim.o.shell = "pwsh"
-    elseif vim.fn.executable("powershell") == 1 then
-      vim.o.shell = "powershell"
+    if vim.fn.executable 'pwsh' == 1 then
+      vim.o.shell = 'pwsh'
+    elseif vim.fn.executable 'powershell' == 1 then
+      vim.o.shell = 'powershell'
     else
-      return LazyVim.error("No powershell executable found")
+      return PSVim.error 'No powershell executable found'
     end
 
     -- Setting shell command flags
@@ -30,8 +30,8 @@ function M.setup(shell)
     vim.o.shellpipe = '2>&1 | %%{ "$_" } | tee %s; exit $LastExitCode'
 
     -- Setting shell quote options
-    vim.o.shellquote = ""
-    vim.o.shellxquote = ""
+    vim.o.shellquote = ''
+    vim.o.shellxquote = ''
   end
 end
 

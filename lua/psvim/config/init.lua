@@ -5,6 +5,7 @@ _G.PSVim.config = M
 
 ---@class PSVimConfig: PSVimOptions
 local M = {}
+M.buf = 0
 
 PSVim.config = M
 
@@ -17,17 +18,8 @@ local defaults = {
   end,
   -- load the default settings
   defaults = {
-    autocmds = true, -- lazyvim.config.autocmds
-    keymaps = true, -- lazyvim.config.keymaps
-    -- lazyvim.config.options can't be configured here since that's loaded before lazyvim setup
-    -- if you want to disable loading options, add `package.loaded["lazyvim.config.options"] = true` to the top of your init.lua
-  },
-  news = {
-    -- When enabled, NEWS.md will be shown when changed.
-    -- This only contains big new features and breaking changes.
-    lazyvim = true,
-    -- Same but for Neovim's news.txt
-    neovim = false,
+    autocmds = true, -- psvim.config.autocmds
+    keymaps = true, -- psvim.config.keymaps
   },
   -- icons used by other plugins
   -- stylua: ignore
@@ -292,6 +284,78 @@ function M.init()
   end
 
   PSVim.plugin.setup()
+end
+
+---@alias PSVimDefault {name: string, extra: string, enabled?: boolean, origin?: "global" | "default" | "extra" }
+
+local default_extras ---@type table<string, PSVimDefault>
+
+function M.get_defaults()
+  if default_extras then
+    return default_extras
+  end
+  -- keeping this bit incase I wanna change the defaults in the future
+  ---@type table<string, PSVimDefault[]>
+  local checks = {
+    picker = {
+      { name = 'snacks', extra = 'editor.snacks_picker' },
+      { name = 'fzf', extra = 'editor.fzf' },
+      { name = 'telescope', extra = 'editor.telescope' },
+    },
+    cmp = {
+      { name = 'blink.cmp', extra = 'coding.blink', enabled = vim.fn.has 'nvim-0.10' == 1 },
+      { name = 'nvim-cmp', extra = 'coding.nvim-cmp' },
+    },
+    -- will add more if I want to choose different defaults
+  }
+
+  default_extras = {}
+  for name, check in pairs(checks) do
+    local valid = {} ---@type string[]
+    for _, extra in ipairs(check) do
+      if extra.enabled ~= false then
+        valid[#valid + 1] = extra.name
+      end
+    end
+    local origin = 'default'
+    local use = vim.g['psvim_' .. name]
+    use = vim.tbl_contains(valid, use or 'auto') and use or nil
+    origin = use and 'global' or origin
+    for _, extra in ipairs(use and {} or check) do
+      if extra.enabled ~= false and PSVim.has_extra(extra.extra) then
+        use = extra.name
+        break
+      end
+    end
+    origin = use and 'extra' or origin
+    use = use or valid[1]
+    for _, extra in ipairs(check) do
+      local import = 'psvim.plugins.' .. extra.extra
+      extra = vim.deepcopy(extra)
+      extra.enabled = extra.name == use
+      if extra.enabled then
+        extra.origin = origin
+      end
+      default_extras[import] = extra
+    end
+  end
+  return default_extras
+end
+
+function M.wants(opts)
+  if opts.ft then
+    opts.ft = type(opts.ft) == 'string' and { opts.ft } or opts.ft
+    for _, f in ipairs(opts.ft) do
+      if vim.bo[M.buf].filetype == f then
+        return true
+      end
+    end
+  end
+  if opts.root then
+    opts.root = type(opts.root) == 'string' and { opts.root } or opts.root
+    return #PSVim.root.detectors.pattern(M.buf, opts.root) > 0
+  end
+  return false
 end
 
 setmetatable(M, {

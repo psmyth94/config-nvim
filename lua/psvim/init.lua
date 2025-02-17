@@ -21,11 +21,6 @@ function M.setup(opts)
   require('lazy').setup {
     spec = {
       { import = 'psvim.plugins' },
-      { import = 'psvim.plugins.ai' },
-      { import = 'psvim.plugins.lang' },
-      { import = 'psvim.plugins.coding' },
-      { import = 'psvim.plugins.git' },
-      { import = 'psvim.plugins.dap' },
     },
     defaults = {
       -- By default, only PSVim plugins will be lazy-loaded. Your custom plugins will load during startup.
