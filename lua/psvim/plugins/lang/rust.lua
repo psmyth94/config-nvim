@@ -10,7 +10,7 @@ local diagnostics = vim.g.psvim_rust_diagnostics or 'rust-analyzer'
 
 return {
   recommended = function()
-    return PSVim.extras.wants {
+    return PSVim.wants {
       ft = 'rust',
       root = { 'Cargo.toml', 'rust-project.json' },
     }

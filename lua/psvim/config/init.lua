@@ -286,77 +286,26 @@ function M.init()
   PSVim.plugin.setup()
 end
 
----@alias PSVimDefault {name: string, extra: string, enabled?: boolean, origin?: "global" | "default" | "extra" }
-
-local default_extras ---@type table<string, PSVimDefault>
-
-function M.get_defaults()
-  if default_extras then
-    return default_extras
+function M.has_extra(extra)
+  local modname = 'psvim.plugins.' .. extra
+  local LazyConfig = require 'lazy.core.config'
+  -- check if it was imported already
+  if vim.tbl_contains(LazyConfig.spec.modules, modname) then
+    return true
   end
-  -- keeping this bit incase I wanna change the defaults in the future
-  ---@type table<string, PSVimDefault[]>
-  local checks = {
-    picker = {
-      { name = 'snacks', extra = 'editor.snacks_picker' },
-      { name = 'fzf', extra = 'editor.fzf' },
-      { name = 'telescope', extra = 'editor.telescope' },
-    },
-    cmp = {
-      { name = 'blink.cmp', extra = 'coding.blink', enabled = vim.fn.has 'nvim-0.10' == 1 },
-      { name = 'nvim-cmp', extra = 'coding.nvim-cmp' },
-    },
-    -- will add more if I want to choose different defaults
-  }
-
-  default_extras = {}
-  for name, check in pairs(checks) do
-    local valid = {} ---@type string[]
-    for _, extra in ipairs(check) do
-      if extra.enabled ~= false then
-        valid[#valid + 1] = extra.name
-      end
-    end
-    local origin = 'default'
-    local use = vim.g['psvim_' .. name]
-    use = vim.tbl_contains(valid, use or 'auto') and use or nil
-    origin = use and 'global' or origin
-    for _, extra in ipairs(use and {} or check) do
-      if extra.enabled ~= false and PSVim.has_extra(extra.extra) then
-        use = extra.name
-        break
-      end
-    end
-    origin = use and 'extra' or origin
-    use = use or valid[1]
-    for _, extra in ipairs(check) do
-      local import = 'psvim.plugins.' .. extra.extra
-      extra = vim.deepcopy(extra)
-      extra.enabled = extra.name == use
-      if extra.enabled then
-        extra.origin = origin
-      end
-      default_extras[import] = extra
-    end
-  end
-  return default_extras
-end
-
-function M.wants(opts)
-  if opts.ft then
-    opts.ft = type(opts.ft) == 'string' and { opts.ft } or opts.ft
-    for _, f in ipairs(opts.ft) do
-      if vim.bo[M.buf].filetype == f then
+  -- check if it's in the imports
+  local spec = LazyConfig.options.spec
+  if type(spec) == 'table' then
+    for _, s in ipairs(spec) do
+      if type(s) == 'table' and s.import == modname then
         return true
       end
     end
   end
-  if opts.root then
-    opts.root = type(opts.root) == 'string' and { opts.root } or opts.root
-    return #PSVim.root.detectors.pattern(M.buf, opts.root) > 0
-  end
   return false
 end
+
+---@alias PSVimDefault {name: string, extra: string, enabled?: boolean, origin?: "global" | "default" | "extra" }
 
 setmetatable(M, {
   __index = function(_, key)

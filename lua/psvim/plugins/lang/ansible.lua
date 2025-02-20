@@ -1,5 +1,10 @@
 return {
-  recommended = true,
+  recommended = function()
+    return PSVim.wants {
+      ft = 'yaml.ansible',
+      root = { 'ansible.cfg', '.ansible-lint' },
+    }
+  end,
   {
     'williamboman/mason.nvim',
     opts = { ensure_installed = { 'ansible-lint' } },

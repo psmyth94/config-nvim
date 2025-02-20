@@ -29,6 +29,10 @@ local imports = {
   'psvim.plugins.lang.terraform',
   'psvim.plugins.lang.rust',
   'psvim.plugins.lang.typescript',
+  'psvim.plugins.lang.git',
+  'psvim.plugins.lang.cmake',
+  'psvim.plugins.lang.docker',
+  'psvim.plugins.lang.bash',
   -- ## git ##
   'psvim.plugins.git.fugitive',
   -- ## editor ##
