@@ -6,22 +6,24 @@ return {
     cmd = 'Copilot',
     build = ':Copilot auth',
     event = 'BufReadPost',
-    opts = {
-      suggestion = {
-        enabled = not vim.g.ai_cmp,
-        auto_trigger = true,
-        hide_during_completion = vim.g.ai_cmp,
-        keymap = {
-          accept = false, -- handled by nvim-cmp / blink.cmp
-          next = '<M-]>',
-          prev = '<M-[>',
+    config = function()
+      require('copilot').setup {
+        suggestion = {
+          enabled = not vim.g.ai_cmp,
+          auto_trigger = true,
+          hide_during_completion = vim.g.ai_cmp,
+          keymap = {
+            accept = false, -- handled by nvim-cmp / blink.cmp
+            next = '<M-]>',
+            prev = '<M-[>',
+          },
         },
-      },
-      panel = { enabled = false },
-      filetypes = {
-        ['*'] = true, -- enable copilot for all filetypes
-      },
-    },
+        panel = { enabled = false },
+        filetypes = {
+          ['*'] = true, -- enable copilot for all filetypes
+        },
+      }
+    end,
   },
   -- add ai_accept action
   {

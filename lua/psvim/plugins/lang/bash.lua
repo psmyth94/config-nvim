@@ -11,7 +11,7 @@ return {
   },
   {
     'williamboman/mason.nvim',
-    opts = { ensure_installed = { 'shellcheck', 'bashls' } },
+    opts = { ensure_installed = { 'shellcheck', 'bash-language-server' } },
   },
   {
     'neovim/nvim-lspconfig',
