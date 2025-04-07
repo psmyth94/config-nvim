@@ -85,11 +85,36 @@ return {
     opts = {
       adapters = {
         ['neotest-python'] = {
-          -- Here you can specify the settings for the adapter, i.e.
-          -- runner = "pytest",
-          -- python = ".venv/bin/python",
+          -- Extra arguments for nvim-dap configuration
+          -- See https://github.com/microsoft/debugpy/wiki/Debug-configuration-settings for values
+          dap = { justMyCode = false },
+          -- Command line arguments for runner
+          -- Can also be a function to return dynamic values
+          args = { '--log-level', 'DEBUG' },
+          -- Runner to use. Will use pytest if available by default.
+          -- Can be a function to return dynamic value.
+          runner = 'pytest',
+          -- !!EXPERIMENTAL!! Enable shelling out to `pytest` to discover test
+          -- instances for files containing a parametrize mark (default: false)
+          pytest_discover_instances = true,
         },
       },
+    },
+    keys = {
+      { '<leader>tF', mode = 'n', "<cmd>lua require('neotest').run.run({vim.fn.expand('%'), strategy = 'dap'})<cr>", desc = 'Debug File' },
+      { '<leader>tL', mode = 'n', "<cmd>lua require('neotest').run.run_last({strategy = 'dap'})<cr>", desc = 'Debug Last' },
+      { '<leader>ta', mode = 'n', "<cmd>lua require('neotest').run.attach()<cr>", desc = 'Attach' },
+      { '<leader>tf', mode = 'n', "<cmd>lua require('neotest').run.run(vim.fn.expand('%'))<cr>", desc = 'File' },
+      { '<leader>tl', mode = 'n', "<cmd>lua require('neotest').run.run_last()<cr>", desc = 'Last' },
+      { '<leader>tn', mode = 'n', "<cmd>lua require('neotest').run.run()<cr>", desc = 'Nearest' },
+      { '<leader>tN', mode = 'n', "<cmd>lua require('neotest').run.run({strategy = 'dap'})<cr>", desc = 'Debug Nearest' },
+      { '<leader>to', mode = 'n', "<cmd>lua require('neotest').output.open({ enter = true })<cr>", desc = 'Output' },
+      { '<leader>ts', mode = 'n', "<cmd>lua require('neotest').run.stop()<cr>", desc = 'Stop' },
+      { '<leader>tr', mode = 'n', "<cmd>lua require('neotest').run.run(vim.fn.getcwd())<cr>", desc = 'Run All' },
+      { '<leader>tR', mode = 'n', "<cmd>lua require('neotest').run.run(vim.fn.getcwd(), {strategy = 'dap'})<cr>", desc = 'Debug Run All' },
+      { '<leader>tO', mode = 'n', "<cmd>lua require('neotest').output.open()<cr>", desc = 'Open' },
+      { '<leader>tT', mode = 'n', "<cmd>lua require('neotest').summary.open()<cr>", desc = 'Toggle' },
+      { '<leader>tS', mode = 'n', "<cmd>lua require('neotest').summary.toggle()<cr>", desc = 'Summary' },
     },
   },
   {
@@ -97,17 +122,25 @@ return {
     optional = true,
     dependencies = {
       'mfussenegger/nvim-dap-python',
+      {
+        'williamboman/mason.nvim',
+        opts = function(_, opts)
+          opts.ensure_installed = opts.ensure_installed or {}
+          table.insert(opts.ensure_installed, 'debugpy')
+        end,
+      },
       -- stylua: ignore
       keys = {
         { "<leader>dPt", function() require('dap-python').test_method() end, desc = "Debug Method", ft = "python" },
         { "<leader>dPc", function() require('dap-python').test_class() end, desc = "Debug Class", ft = "python" },
       },
       config = function()
-        if vim.fn.has 'win32' == 1 then
-          require('dap-python').setup(PSVim.get_pkg_path('debugpy', '/venv/Scripts/pythonw.exe'))
-        else
-          require('dap-python').setup(PSVim.get_pkg_path('debugpy', '/venv/bin/python'))
-        end
+        -- fix: E5108: Error executing lua .../Local/nvim-data/lazy/nvim-dap-ui/lua/dapui/controls.lua:14: attempt to index local 'element' (a nil value)
+        -- see: https://github.com/rcarriga/nvim-dap-ui/issues/279#issuecomment-1596258077
+        require('dapui').setup()
+        -- uses the debugpy installation by mason
+        local debugpyPythonPath = require('mason-registry').get_package('debugpy'):get_install_path() .. '/venv/bin/python3'
+        require('dap-python').setup(debugpyPythonPath, {}) ---@diagnostic disable-line: missing-fields
       end,
     },
   },

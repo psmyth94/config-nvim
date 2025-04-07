@@ -37,6 +37,8 @@ local imports = {
   'psvim.plugins.git.fugitive',
   -- ## editor ##
   'psvim.plugins.editor.snacks_picker',
+  -- ## jupyter ##
+  'psvim.plugins.jupyter.jupytext',
 }
 
 for _, name in ipairs(imports) do
