@@ -1,9 +1,4 @@
 return {
-  recommended = function()
-    return PSVim.wants {
-      ft = 'ipynb',
-    }
-  end,
   {
     'goerz/jupytext.nvim',
     dependencies = {

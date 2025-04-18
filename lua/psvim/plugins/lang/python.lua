@@ -9,6 +9,18 @@ end
 local lsp = vim.g.psvim_python_lsp or 'pyright'
 local ruff = vim.g.psvim_python_ruff or 'ruff'
 
+local get_python_path = function()
+  local venv_path = os.getenv 'VIRTUAL_ENV'
+  local conda_path = os.getenv 'CONDA_PREFIX'
+  if venv_path then
+    return venv_path .. '/bin/python'
+  elseif conda_path then
+    return conda_path .. '/bin/python'
+  else
+    return '/usr/bin/python'
+  end
+end
+
 return {
   recommended = function()
     return PSVim.wants {
@@ -78,28 +90,23 @@ return {
   },
   {
     'nvim-neotest/neotest',
-    optional = true,
     dependencies = {
+      'antoinemadec/FixCursorHold.nvim',
       'nvim-neotest/neotest-python',
     },
-    opts = {
-      adapters = {
-        ['neotest-python'] = {
-          -- Extra arguments for nvim-dap configuration
-          -- See https://github.com/microsoft/debugpy/wiki/Debug-configuration-settings for values
-          dap = { justMyCode = false },
-          -- Command line arguments for runner
-          -- Can also be a function to return dynamic values
-          args = { '--log-level', 'DEBUG' },
-          -- Runner to use. Will use pytest if available by default.
-          -- Can be a function to return dynamic value.
-          runner = 'pytest',
-          -- !!EXPERIMENTAL!! Enable shelling out to `pytest` to discover test
-          -- instances for files containing a parametrize mark (default: false)
-          pytest_discover_instances = true,
+    config = function()
+      require('neotest').setup { ---@diagnostic disable-line: missing-fields
+        adapters = {
+          require 'neotest-python' {
+            dap = { justMyCode = false },
+            args = { '--log-level', 'DEBUG' },
+            pytest_discovery = true,
+            runner = 'pytest',
+            python = get_python_path(),
+          },
         },
-      },
-    },
+      }
+    end,
     keys = {
       { '<leader>tF', mode = 'n', "<cmd>lua require('neotest').run.run({vim.fn.expand('%'), strategy = 'dap'})<cr>", desc = 'Debug File' },
       { '<leader>tL', mode = 'n', "<cmd>lua require('neotest').run.run_last({strategy = 'dap'})<cr>", desc = 'Debug Last' },
@@ -119,7 +126,6 @@ return {
   },
   {
     'mfussenegger/nvim-dap',
-    optional = true,
     dependencies = {
       'mfussenegger/nvim-dap-python',
       {
@@ -134,15 +140,48 @@ return {
         { "<leader>dPt", function() require('dap-python').test_method() end, desc = "Debug Method", ft = "python" },
         { "<leader>dPc", function() require('dap-python').test_class() end, desc = "Debug Class", ft = "python" },
       },
-      config = function()
-        -- fix: E5108: Error executing lua .../Local/nvim-data/lazy/nvim-dap-ui/lua/dapui/controls.lua:14: attempt to index local 'element' (a nil value)
-        -- see: https://github.com/rcarriga/nvim-dap-ui/issues/279#issuecomment-1596258077
-        require('dapui').setup()
-        -- uses the debugpy installation by mason
-        local debugpyPythonPath = require('mason-registry').get_package('debugpy'):get_install_path() .. '/venv/bin/python3'
-        require('dap-python').setup(debugpyPythonPath, {}) ---@diagnostic disable-line: missing-fields
-      end,
     },
+    config = function()
+      local dap_python = require 'dap-python'
+      if vim.fn.has 'win32' == 1 then
+        dap_python.setup(PSVim.get_pkg_path('debugpy', '/venv/Scripts/pythonw.exe'))
+      else
+        dap_python.setup(PSVim.get_pkg_path('debugpy', get_python_path()))
+      end
+      local dap = require 'dap'
+      dap.adapters.lldb = {
+        type = 'executable',
+        command = 'lldb-dap',
+        name = 'lldb',
+      }
+      dap.adapters.python = {
+        type = 'executable',
+        justMyCode = false,
+        command = 'python',
+        args = { '-m', 'debugpy.adapter' },
+      }
+      dap.configurations.python = {
+        {
+          type = 'python',
+          request = 'launch',
+          justMyCode = false,
+          name = 'Launch file',
+          program = '${file}',
+          pythonPath = function()
+            local venv_path = os.getenv 'VIRTUAL_ENV'
+            local conda_path = os.getenv 'CONDA_PREFIX'
+
+            if conda_path then
+              return conda_path .. '/bin/python'
+            elseif venv_path then
+              return venv_path .. '/bin/python'
+            else
+              return '/usr/bin/python'
+            end
+          end,
+        },
+      }
+    end,
   },
 
   {

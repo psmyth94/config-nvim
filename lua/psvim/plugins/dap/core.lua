@@ -16,6 +16,19 @@ local function get_args(config)
   return config
 end
 
+local eval_expr = function()
+  local util = require 'dapui.util'
+  local initial_expr = util.get_current_expr()
+
+  -- Allow editing the expression before evaluation
+  local edited_expr = vim.fn.input('Expression to evaluate: ', initial_expr)
+
+  -- Only evaluate if user didn't cancel (pressed Enter)
+  if edited_expr and edited_expr ~= '' then
+    require('dapui').eval(edited_expr)
+  end
+end
+
 return {
   {
     'mfussenegger/nvim-dap',
@@ -43,8 +56,8 @@ return {
       { "<leader>dj", function() require("dap").down() end, desc = "Down" },
       { "<leader>dk", function() require("dap").up() end, desc = "Up" },
       { "<leader>dl", function() require("dap").run_last() end, desc = "Run Last" },
-      { "<leader>do", function() require("dap").step_out() end, desc = "Step Out" },
-      { "<leader>dO", function() require("dap").step_over() end, desc = "Step Over" },
+      { "<leader>dO", function() require("dap").step_out() end, desc = "Step Out" },
+      { "<leader>do", function() require("dap").step_over() end, desc = "Step Over" },
       { "<leader>dP", function() require("dap").pause() end, desc = "Pause" },
       { "<leader>dr", function() require("dap").repl.toggle() end, desc = "Toggle REPL" },
       { "<leader>ds", function() require("dap").session() end, desc = "Session" },
@@ -81,7 +94,8 @@ return {
     -- stylua: ignore
     keys = {
       { "<leader>du", function() require("dapui").toggle({ }) end, desc = "Dap UI" },
-      { "<leader>de", function() require("dapui").eval() end, desc = "Eval", mode = {"n", "v"} },
+      { "<leader>de", function() require("dapui").eval() end, desc = "Eval Expression Under Cursor", mode = {"n", "v"} },
+      { "<leader>dE", eval_expr, desc = "Eval Expression", mode = {"n", "v"} },
     },
     opts = {},
     config = function(_, opts)

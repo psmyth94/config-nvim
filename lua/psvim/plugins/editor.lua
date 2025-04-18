@@ -2,24 +2,24 @@ return {
 
   -- search/replace in multiple files
   {
-    "MagicDuck/grug-far.nvim",
+    'MagicDuck/grug-far.nvim',
     opts = { headerMaxWidth = 80 },
-    cmd = "GrugFar",
+    cmd = 'GrugFar',
     keys = {
       {
-        "<leader>sr",
+        '<leader>sr',
         function()
-          local grug = require("grug-far")
-          local ext = vim.bo.buftype == "" and vim.fn.expand("%:e")
-          grug.open({
+          local grug = require 'grug-far'
+          local ext = vim.bo.buftype == '' and vim.fn.expand '%:e'
+          grug.open {
             transient = true,
             prefills = {
-              filesFilter = ext and ext ~= "" and "*." .. ext or nil,
+              filesFilter = ext and ext ~= '' and '*.' .. ext or nil,
             },
-          })
+          }
         end,
-        mode = { "n", "v" },
-        desc = "Search and Replace",
+        mode = { 'n', 'v' },
+        desc = 'Search and Replace',
       },
     },
   },
@@ -28,8 +28,8 @@ return {
   -- at the end of each match, letting you quickly jump to a specific
   -- location.
   {
-    "folke/flash.nvim",
-    event = "VeryLazy",
+    'folke/flash.nvim',
+    event = 'VeryLazy',
     vscode = true,
     ---@type Flash.Config
     opts = {},
@@ -46,72 +46,73 @@ return {
   -- which-key helps you remember key bindings by showing a popup
   -- with the active keybindings of the command you started typing.
   {
-    "folke/which-key.nvim",
-    event = "VeryLazy",
-    opts_extend = { "spec" },
+    'folke/which-key.nvim',
+    event = 'VeryLazy',
+    opts_extend = { 'spec' },
     opts = {
-      preset = "helix",
+      preset = 'helix',
       defaults = {},
       spec = {
         {
-          mode = { "n", "v" },
-          { "<leader><tab>", group = "tabs" },
-          { "<leader>c", group = "code" },
-          { "<leader>d", group = "debug" },
-          { "<leader>dp", group = "profiler" },
-          { "<leader>f", group = "file/find" },
-          { "<leader>g", group = "git" },
-          { "<leader>gh", group = "hunks" },
-          { "<leader>q", group = "quit/session" },
-          { "<leader>s", group = "search" },
-          { "<leader>u", group = "ui", icon = { icon = "󰙵 ", color = "cyan" } },
-          { "<leader>x", group = "diagnostics/quickfix", icon = { icon = "󱖫 ", color = "green" } },
-          { "[", group = "prev" },
-          { "]", group = "next" },
-          { "g", group = "goto" },
-          { "gs", group = "surround" },
-          { "z", group = "fold" },
+          mode = { 'n', 'v' },
+          { '<leader><tab>', group = 'tabs' },
+          { '<leader>c', group = 'code' },
+          { '<leader>d', group = 'debug' },
+          { '<leader>dp', group = 'profiler' },
+          { '<leader>f', group = 'file/find' },
+          { '<leader>g', group = 'git' },
+          { '<leader>gh', group = 'hunks' },
+          { '<leader>q', group = 'quit/session' },
+          { '<leader>s', group = 'search' },
+          { '<leader>u', group = 'ui', icon = { icon = '󰙵 ', color = 'cyan' } },
+          { '<leader>x', group = 'diagnostics/quickfix', icon = { icon = '󱖫 ', color = 'green' } },
+          { '<leader>t', group = 'debugging', icon = { icon = '󰒡 ', color = 'blue' } },
+          { '[', group = 'prev' },
+          { ']', group = 'next' },
+          { 'g', group = 'goto' },
+          { 'gs', group = 'surround' },
+          { 'z', group = 'fold' },
           {
-            "<leader>b",
-            group = "buffer",
+            '<leader>b',
+            group = 'buffer',
             expand = function()
-              return require("which-key.extras").expand.buf()
+              return require('which-key.extras').expand.buf()
             end,
           },
           {
-            "<leader>w",
-            group = "windows",
-            proxy = "<c-w>",
+            '<leader>w',
+            group = 'windows',
+            proxy = '<c-w>',
             expand = function()
-              return require("which-key.extras").expand.win()
+              return require('which-key.extras').expand.win()
             end,
           },
           -- better descriptions
-          { "gx", desc = "Open with system app" },
+          { 'gx', desc = 'Open with system app' },
         },
       },
     },
     keys = {
       {
-        "<leader>?",
+        '<leader>?',
         function()
-          require("which-key").show({ global = false })
+          require('which-key').show { global = false }
         end,
-        desc = "Buffer Keymaps (which-key)",
+        desc = 'Buffer Keymaps (which-key)',
       },
       {
-        "<c-w><space>",
+        '<c-w><space>',
         function()
-          require("which-key").show({ keys = "<c-w>", loop = true })
+          require('which-key').show { keys = '<c-w>', loop = true }
         end,
-        desc = "Window Hydra Mode (which-key)",
+        desc = 'Window Hydra Mode (which-key)',
       },
     },
     config = function(_, opts)
-      local wk = require("which-key")
+      local wk = require 'which-key'
       wk.setup(opts)
       if not vim.tbl_isempty(opts.defaults) then
-        PSVim.warn("which-key: opts.defaults is deprecated. Please use opts.spec instead.")
+        PSVim.warn 'which-key: opts.defaults is deprecated. Please use opts.spec instead.'
         wk.register(opts.defaults)
       end
     end,
@@ -121,23 +122,23 @@ return {
   -- git commit, and also lets you interactively stage & unstage
   -- hunks in a commit.
   {
-    "lewis6991/gitsigns.nvim",
-    event = "LazyFile",
+    'lewis6991/gitsigns.nvim',
+    event = 'LazyFile',
     opts = {
       signs = {
-        add = { text = "▎" },
-        change = { text = "▎" },
-        delete = { text = "" },
-        topdelete = { text = "" },
-        changedelete = { text = "▎" },
-        untracked = { text = "▎" },
+        add = { text = '▎' },
+        change = { text = '▎' },
+        delete = { text = '' },
+        topdelete = { text = '' },
+        changedelete = { text = '▎' },
+        untracked = { text = '▎' },
       },
       signs_staged = {
-        add = { text = "▎" },
-        change = { text = "▎" },
-        delete = { text = "" },
-        topdelete = { text = "" },
-        changedelete = { text = "▎" },
+        add = { text = '▎' },
+        change = { text = '▎' },
+        delete = { text = '' },
+        topdelete = { text = '' },
+        changedelete = { text = '▎' },
       },
       on_attach = function(buffer)
         local gs = package.loaded.gitsigns
@@ -178,43 +179,43 @@ return {
     },
   },
   {
-    "gitsigns.nvim",
+    'gitsigns.nvim',
     opts = function()
       Snacks.toggle({
-        name = "Git Signs",
+        name = 'Git Signs',
         get = function()
-          return require("gitsigns.config").config.signcolumn
+          return require('gitsigns.config').config.signcolumn
         end,
         set = function(state)
-          require("gitsigns").toggle_signs(state)
+          require('gitsigns').toggle_signs(state)
         end,
-      }):map("<leader>uG")
+      }):map '<leader>uG'
     end,
   },
 
   -- better diagnostics list and others
   {
-    "folke/trouble.nvim",
-    cmd = { "Trouble" },
+    'folke/trouble.nvim',
+    cmd = { 'Trouble' },
     opts = {
       modes = {
         lsp = {
-          win = { position = "right" },
+          win = { position = 'right' },
         },
       },
     },
     keys = {
-      { "<leader>xx", "<cmd>Trouble diagnostics toggle<cr>", desc = "Diagnostics (Trouble)" },
-      { "<leader>xX", "<cmd>Trouble diagnostics toggle filter.buf=0<cr>", desc = "Buffer Diagnostics (Trouble)" },
-      { "<leader>cs", "<cmd>Trouble symbols toggle<cr>", desc = "Symbols (Trouble)" },
-      { "<leader>cS", "<cmd>Trouble lsp toggle<cr>", desc = "LSP references/definitions/... (Trouble)" },
-      { "<leader>xL", "<cmd>Trouble loclist toggle<cr>", desc = "Location List (Trouble)" },
-      { "<leader>xQ", "<cmd>Trouble qflist toggle<cr>", desc = "Quickfix List (Trouble)" },
+      { '<leader>xx', '<cmd>Trouble diagnostics toggle<cr>', desc = 'Diagnostics (Trouble)' },
+      { '<leader>xX', '<cmd>Trouble diagnostics toggle filter.buf=0<cr>', desc = 'Buffer Diagnostics (Trouble)' },
+      { '<leader>cs', '<cmd>Trouble symbols toggle<cr>', desc = 'Symbols (Trouble)' },
+      { '<leader>cS', '<cmd>Trouble lsp toggle<cr>', desc = 'LSP references/definitions/... (Trouble)' },
+      { '<leader>xL', '<cmd>Trouble loclist toggle<cr>', desc = 'Location List (Trouble)' },
+      { '<leader>xQ', '<cmd>Trouble qflist toggle<cr>', desc = 'Quickfix List (Trouble)' },
       {
-        "[q",
+        '[q',
         function()
-          if require("trouble").is_open() then
-            require("trouble").prev({ skip_groups = true, jump = true })
+          if require('trouble').is_open() then
+            require('trouble').prev { skip_groups = true, jump = true }
           else
             local ok, err = pcall(vim.cmd.cprev)
             if not ok then
@@ -222,13 +223,13 @@ return {
             end
           end
         end,
-        desc = "Previous Trouble/Quickfix Item",
+        desc = 'Previous Trouble/Quickfix Item',
       },
       {
-        "]q",
+        ']q',
         function()
-          if require("trouble").is_open() then
-            require("trouble").next({ skip_groups = true, jump = true })
+          if require('trouble').is_open() then
+            require('trouble').next { skip_groups = true, jump = true }
           else
             local ok, err = pcall(vim.cmd.cnext)
             if not ok then
@@ -236,7 +237,7 @@ return {
             end
           end
         end,
-        desc = "Next Trouble/Quickfix Item",
+        desc = 'Next Trouble/Quickfix Item',
       },
     },
   },
@@ -244,9 +245,9 @@ return {
   -- Finds and lists all of the TODO, HACK, BUG, etc comment
   -- in your project and loads them into a browsable list.
   {
-    "folke/todo-comments.nvim",
-    cmd = { "TodoTrouble", "TodoTelescope" },
-    event = "LazyFile",
+    'folke/todo-comments.nvim',
+    cmd = { 'TodoTrouble', 'TodoTelescope' },
+    event = 'LazyFile',
     opts = {},
     -- stylua: ignore
     keys = {
