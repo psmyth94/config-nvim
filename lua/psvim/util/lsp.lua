@@ -27,7 +27,7 @@ end
 ---@param on_attach fun(client:vim.lsp.Client, buffer)
 ---@param name? string
 function M.on_attach(on_attach, name)
-  return vim.api.nvim_create_autocmd("LspAttach", {
+  return vim.api.nvim_create_autocmd('LspAttach', {
     callback = function(args)
       local buffer = args.buf ---@type number
       local client = vim.lsp.get_client_by_id(args.data.client_id)
@@ -42,15 +42,22 @@ end
 M._supports_method = {}
 
 function M.setup()
-  local register_capability = vim.lsp.handlers["client/registerCapability"]
-  vim.lsp.handlers["client/registerCapability"] = function(err, res, ctx)
+  local ok, wf = pcall(require, 'vim.lsp._watchfiles')
+  if ok then
+    -- disable lsp watcher. Too slow on linux
+    wf._watchfunc = function()
+      return function() end
+    end
+  end
+  local register_capability = vim.lsp.handlers['client/registerCapability']
+  vim.lsp.handlers['client/registerCapability'] = function(err, res, ctx)
     ---@diagnostic disable-next-line: no-unknown
     local ret = register_capability(err, res, ctx)
     local client = vim.lsp.get_client_by_id(ctx.client_id)
     if client then
       for buffer in pairs(client.attached_buffers) do
-        vim.api.nvim_exec_autocmds("User", {
-          pattern = "LspDynamicCapability",
+        vim.api.nvim_exec_autocmds('User', {
+          pattern = 'LspDynamicCapability',
           data = { client_id = client.id, buffer = buffer },
         })
       end
@@ -72,7 +79,7 @@ function M._check_methods(client, buffer)
     return
   end
   -- don't trigger on nofile buffers
-  if vim.bo[buffer].buftype == "nofile" then
+  if vim.bo[buffer].buftype == 'nofile' then
     return
   end
   for method, clients in pairs(M._supports_method) do
@@ -80,8 +87,8 @@ function M._check_methods(client, buffer)
     if not clients[client][buffer] then
       if client.supports_method and client.supports_method(method, { bufnr = buffer }) then
         clients[client][buffer] = true
-        vim.api.nvim_exec_autocmds("User", {
-          pattern = "LspSupportsMethod",
+        vim.api.nvim_exec_autocmds('User', {
+          pattern = 'LspSupportsMethod',
           data = { client_id = client.id, buffer = buffer, method = method },
         })
       end
@@ -92,8 +99,8 @@ end
 ---@param fn fun(client:vim.lsp.Client, buffer):boolean?
 ---@param opts? {group?: integer}
 function M.on_dynamic_capability(fn, opts)
-  return vim.api.nvim_create_autocmd("User", {
-    pattern = "LspDynamicCapability",
+  return vim.api.nvim_create_autocmd('User', {
+    pattern = 'LspDynamicCapability',
     group = opts and opts.group or nil,
     callback = function(args)
       local client = vim.lsp.get_client_by_id(args.data.client_id)
@@ -108,9 +115,9 @@ end
 ---@param method string
 ---@param fn fun(client:vim.lsp.Client, buffer)
 function M.on_supports_method(method, fn)
-  M._supports_method[method] = M._supports_method[method] or setmetatable({}, { __mode = "k" })
-  return vim.api.nvim_create_autocmd("User", {
-    pattern = "LspSupportsMethod",
+  M._supports_method[method] = M._supports_method[method] or setmetatable({}, { __mode = 'k' })
+  return vim.api.nvim_create_autocmd('User', {
+    pattern = 'LspSupportsMethod',
     callback = function(args)
       local client = vim.lsp.get_client_by_id(args.data.client_id)
       local buffer = args.data.buffer ---@type number
@@ -123,17 +130,17 @@ end
 
 ---@return _.lspconfig.options
 function M.get_config(server)
-  local configs = require("lspconfig.configs")
+  local configs = require 'lspconfig.configs'
   return rawget(configs, server)
 end
 
 ---@return {default_config:lspconfig.Config}
 function M.get_raw_config(server)
-  local ok, ret = pcall(require, "lspconfig.configs." .. server)
+  local ok, ret = pcall(require, 'lspconfig.configs.' .. server)
   if ok then
     return ret
   end
-  return require("lspconfig.server_configurations." .. server)
+  return require('lspconfig.server_configurations.' .. server)
 end
 
 function M.is_enabled(server)
@@ -144,7 +151,7 @@ end
 ---@param server string
 ---@param cond fun( root_dir, config): boolean
 function M.disable(server, cond)
-  local util = require("lspconfig.util")
+  local util = require 'lspconfig.util'
   local def = M.get_config(server)
   ---@diagnostic disable-next-line: undefined-field
   def.document_config.on_new_config = util.add_hook_before(def.document_config.on_new_config, function(config, root_dir)
@@ -158,11 +165,11 @@ end
 function M.formatter(opts)
   opts = opts or {}
   local filter = opts.filter or {}
-  filter = type(filter) == "string" and { name = filter } or filter
+  filter = type(filter) == 'string' and { name = filter } or filter
   ---@cast filter lsp.Client.filter
   ---@type LazyFormatter
   local ret = {
-    name = "LSP",
+    name = 'LSP',
     primary = true,
     priority = 1,
     format = function(buf)
@@ -172,8 +179,7 @@ function M.formatter(opts)
       local clients = M.get_clients(PSVim.merge({}, filter, { bufnr = buf }))
       ---@param client vim.lsp.Client
       local ret = vim.tbl_filter(function(client)
-        return client.supports_method("textDocument/formatting")
-          or client.supports_method("textDocument/rangeFormatting")
+        return client.supports_method 'textDocument/formatting' or client.supports_method 'textDocument/rangeFormatting'
       end, clients)
       ---@param client vim.lsp.Client
       return vim.tbl_map(function(client)
@@ -188,14 +194,8 @@ end
 
 ---@param opts? lsp.Client.format
 function M.format(opts)
-  opts = vim.tbl_deep_extend(
-    "force",
-    {},
-    opts or {},
-    PSVim.opts("nvim-lspconfig").format or {},
-    PSVim.opts("conform.nvim").format or {}
-  )
-  local ok, conform = pcall(require, "conform")
+  opts = vim.tbl_deep_extend('force', {}, opts or {}, PSVim.opts('nvim-lspconfig').format or {}, PSVim.opts('conform.nvim').format or {})
+  local ok, conform = pcall(require, 'conform')
   -- use conform for formatting with LSP when available,
   -- since it has better format diffing
   if ok then
@@ -209,13 +209,13 @@ end
 M.action = setmetatable({}, {
   __index = function(_, action)
     return function()
-      vim.lsp.buf.code_action({
+      vim.lsp.buf.code_action {
         apply = true,
         context = {
           only = { action },
           diagnostics = {},
         },
-      })
+      }
     end
   end,
 })
@@ -231,12 +231,12 @@ function M.execute(opts)
     arguments = opts.arguments,
   }
   if opts.open then
-    require("trouble").open({
-      mode = "lsp_command",
+    require('trouble').open {
+      mode = 'lsp_command',
       params = params,
-    })
+    }
   else
-    return vim.lsp.buf_request(0, "workspace/executeCommand", params, opts.handler)
+    return vim.lsp.buf_request(0, 'workspace/executeCommand', params, opts.handler)
   end
 end
 

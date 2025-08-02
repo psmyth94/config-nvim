@@ -40,6 +40,14 @@ return {
     opts = { ensure_installed = { 'ninja', 'rst' } },
   },
   {
+    'stevearc/conform.nvim',
+    optional = true,
+    opts = function(_, opts)
+      opts.formatters_by_ft['py'] = opts.formatters_by_ft[ft] or {}
+      table.insert(opts.formatters_by_ft['py'], 'ruff')
+    end,
+  },
+  {
     'neovim/nvim-lspconfig',
     opts = {
       servers = {
@@ -129,7 +137,7 @@ return {
     dependencies = {
       'mfussenegger/nvim-dap-python',
       {
-        'williamboman/mason.nvim',
+        'mason-org/mason.nvim',
         opts = function(_, opts)
           opts.ensure_installed = opts.ensure_installed or {}
           table.insert(opts.ensure_installed, 'debugpy')
@@ -211,7 +219,6 @@ return {
       table.insert(opts.auto_brackets, 'python')
     end,
   },
-
   -- Don't mess up DAP adapters provided by nvim-dap-python
   {
     'jay-babu/mason-nvim-dap.nvim',

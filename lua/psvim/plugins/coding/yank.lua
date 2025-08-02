@@ -9,7 +9,7 @@ return {
   },
   keys = {
     {
-      '<leader>p',
+      '<leader>yh',
       function()
         if PSVim.pick.picker.name == 'telescope' then
           require('telescope').extensions.yank_history.yank_history {}
@@ -38,5 +38,6 @@ return {
     { '<P', '<Plug>(YankyPutIndentBeforeShiftLeft)', desc = 'Put Before and Indent Left' },
     { '=p', '<Plug>(YankyPutAfterFilter)', desc = 'Put After Applying a Filter' },
     { '=P', '<Plug>(YankyPutBeforeFilter)', desc = 'Put Before Applying a Filter' },
+    { '<leader>p', [["_dP]], mode = { 'x' }, desc = 'Paste Without Yanking' },
   },
 }

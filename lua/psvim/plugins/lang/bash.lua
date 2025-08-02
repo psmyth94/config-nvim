@@ -10,7 +10,7 @@ return {
     opts = { ensure_installed = { 'bash' } },
   },
   {
-    'williamboman/mason.nvim',
+    'mason-org/mason.nvim',
     opts = { ensure_installed = { 'shellcheck', 'bash-language-server' } },
   },
   {

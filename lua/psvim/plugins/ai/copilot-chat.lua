@@ -57,7 +57,7 @@ return {
         mode = { 'n', 'v' },
       },
       {
-        '<leader>aq',
+        '<leader>aQ',
         function()
           local input = vim.fn.input 'Quick Chat: '
           if input ~= '' then
@@ -68,7 +68,7 @@ return {
         mode = { 'n', 'v' },
       },
       -- Show prompts actions with telescope
-      { '<leader>ap', M.pick 'prompt', desc = 'Prompt Actions (CopilotChat)', mode = { 'n', 'v' } },
+      { '<leader>aP', M.pick 'prompt', desc = 'Prompt Actions (CopilotChat)', mode = { 'n', 'v' } },
       -- Generate git message
       -- prevent from C-c from closing the console
       { '<leader>ag', '<CMD>CopilotChatCommit<CR>', desc = 'Generate Commit Message', mode = { 'n', 'v' } },

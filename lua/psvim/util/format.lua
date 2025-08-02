@@ -27,10 +27,10 @@ function M.register(formatter)
 end
 
 function M.formatexpr()
-  if PSVim.has("conform.nvim") then
-    return require("conform").formatexpr()
+  if PSVim.has 'conform.nvim' then
+    return require('conform').formatexpr()
   end
-  return vim.lsp.formatexpr({ timeout_ms = 3000 })
+  return vim.lsp.formatexpr { timeout_ms = 3000 }
 end
 
 ---@param buf? number
@@ -57,30 +57,24 @@ function M.info(buf)
   local baf = vim.b[buf].autoformat
   local enabled = M.enabled(buf)
   local lines = {
-    "# Status",
-    ("- [%s] global **%s**"):format(gaf and "x" or " ", gaf and "enabled" or "disabled"),
-    ("- [%s] buffer **%s**"):format(
-      enabled and "x" or " ",
-      baf == nil and "inherit" or baf and "enabled" or "disabled"
-    ),
+    '# Status',
+    ('- [%s] global **%s**'):format(gaf and 'x' or ' ', gaf and 'enabled' or 'disabled'),
+    ('- [%s] buffer **%s**'):format(enabled and 'x' or ' ', baf == nil and 'inherit' or baf and 'enabled' or 'disabled'),
   }
   local have = false
   for _, formatter in ipairs(M.resolve(buf)) do
     if #formatter.resolved > 0 then
       have = true
-      lines[#lines + 1] = "\n# " .. formatter.name .. (formatter.active and " ***(active)***" or "")
+      lines[#lines + 1] = '\n# ' .. formatter.name .. (formatter.active and ' ***(active)***' or '')
       for _, line in ipairs(formatter.resolved) do
-        lines[#lines + 1] = ("- [%s] **%s**"):format(formatter.active and "x" or " ", line)
+        lines[#lines + 1] = ('- [%s] **%s**'):format(formatter.active and 'x' or ' ', line)
       end
     end
   end
   if not have then
-    lines[#lines + 1] = "\n***No formatters available for this buffer.***"
+    lines[#lines + 1] = '\n***No formatters available for this buffer.***'
   end
-  PSVim[enabled and "info" or "warn"](
-    table.concat(lines, "\n"),
-    { title = "PSFormat (" .. (enabled and "enabled" or "disabled") .. ")" }
-  )
+  PSVim[enabled and 'info' or 'warn'](table.concat(lines, '\n'), { title = 'PSFormat (' .. (enabled and 'enabled' or 'disabled') .. ')' })
 end
 
 ---@param buf? number
@@ -131,40 +125,44 @@ function M.format(opts)
     if formatter.active then
       done = true
       PSVim.try(function()
-        return formatter.format(buf)
-      end, { msg = "Formatter `" .. formatter.name .. "` failed" })
+        if formatter.name == 'conform.nvim' then
+          formatter.format()
+        else
+          formatter.format(buf)
+        end
+      end, { msg = 'Formatter `' .. formatter.name .. '` failed' })
     end
   end
 
   if not done and opts and opts.force then
-    PSVim.warn("No formatter available", { title = "PSVim" })
+    PSVim.warn('No formatter available', { title = 'PSVim' })
   end
 end
 
 function M.setup()
   -- Autoformat autocmd
-  vim.api.nvim_create_autocmd("BufWritePre", {
-    group = vim.api.nvim_create_augroup("PSFormat", {}),
+  vim.api.nvim_create_autocmd('BufWritePre', {
+    group = vim.api.nvim_create_augroup('PSFormat', {}),
     callback = function(event)
-      M.format({ buf = event.buf })
+      M.format { buf = event.buf }
     end,
   })
 
   -- Manual format
-  vim.api.nvim_create_user_command("PSFormat", function()
-    M.format({ force = true })
-  end, { desc = "Format selection or buffer" })
+  vim.api.nvim_create_user_command('PSFormat', function()
+    M.format { force = true }
+  end, { desc = 'Format selection or buffer' })
 
   -- Format info
-  vim.api.nvim_create_user_command("PSFormatInfo", function()
+  vim.api.nvim_create_user_command('PSFormatInfo', function()
     M.info()
-  end, { desc = "Show info about the formatters for the current buffer" })
+  end, { desc = 'Show info about the formatters for the current buffer' })
 end
 
 ---@param buf? boolean
 function M.snacks_toggle(buf)
-  return Snacks.toggle({
-    name = "Auto Format (" .. (buf and "Buffer" or "Global") .. ")",
+  return Snacks.toggle {
+    name = 'Auto Format (' .. (buf and 'Buffer' or 'Global') .. ')',
     get = function()
       if not buf then
         return vim.g.autoformat == nil or vim.g.autoformat
@@ -174,7 +172,7 @@ function M.snacks_toggle(buf)
     set = function(state)
       PSVim.format.enable(state, buf)
     end,
-  })
+  }
 end
 
 return M

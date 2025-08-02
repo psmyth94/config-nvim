@@ -78,7 +78,7 @@ return {
         -- adding any nvim-cmp sources here will enable them
         -- with blink.compat
         compat = {},
-        default = { 'lsp', 'path', 'snippets', 'buffer' },
+        default = { 'jupynium', 'lsp', 'path', 'snippets', 'buffer' },
       },
 
       cmdline = {
@@ -149,7 +149,6 @@ return {
           provider.kind = nil
         end
       end
-
       require('blink.cmp').setup(opts)
     end,
   },
@@ -174,7 +173,12 @@ return {
           lazydev = {
             name = 'LazyDev',
             module = 'lazydev.integrations.blink',
-            score_offset = 100, -- show at a higher priority than lsp
+            score_offset = 99, -- show at a higher priority than lsp
+          },
+          jupynium = {
+            name = 'jupynium',
+            module = 'jupynium.blink_cmp',
+            score_offset = 100,
           },
         },
       },

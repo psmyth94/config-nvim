@@ -5,7 +5,7 @@ return {
     event = 'LazyFile',
     dependencies = {
       'mason.nvim',
-      { 'williamboman/mason-lspconfig.nvim', config = function() end },
+      { 'mason-org/mason-lspconfig.nvim', config = function() end },
       'folke/snacks.nvim',
     },
     opts = function()
@@ -254,7 +254,7 @@ return {
   -- cmdline tools and lsp servers
   {
 
-    'williamboman/mason.nvim',
+    'mason-org/mason.nvim',
     cmd = 'Mason',
     keys = { { '<leader>cm', '<cmd>Mason<cr>', desc = 'Mason' } },
     build = ':MasonUpdate',

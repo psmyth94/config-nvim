@@ -65,6 +65,7 @@ return {
       { "<leader>fb", function() Snacks.picker.buffers() end, desc = "Buffers" },
       { "<leader>fB", function() Snacks.picker.buffers({ hidden = true, nofile = true }) end, desc = "Buffers (all)" },
       { "<leader>fc", PSVim.pick.config_files(), desc = "Find Config File" },
+      { "<leader>fw", "<cmd>e ~/.aws/credentials<cr>", desc = "AWS Credentials" },
       { "<leader>ff", PSVim.pick("files"), desc = "Find Files (Root Dir)" },
       { "<leader>fF", PSVim.pick("files", { root = false }), desc = "Find Files (cwd)" },
       { "<leader>fg", function() Snacks.picker.git_files() end, desc = "Find Files (git-files)" },
@@ -104,6 +105,55 @@ return {
       { "<leader>su", function() Snacks.picker.undo() end, desc = "Undotree" },
       -- ui
       { "<leader>uC", function() Snacks.picker.colorschemes() end, desc = "Colorschemes" },
+      -- aws macros
+      { "<leader>ad", function()
+        vim.cmd [[
+          normal! gg
+          /\[dev\]
+          normal! jVjj
+        ]]
+        -- paste the selection
+        vim.cmd [[
+          normal! p
+          normal! dd
+        ]]
+        end, desc = "Replace AWS credentials for Dev" },
+      { "<leader>ap", function()
+        vim.cmd [[
+          normal! gg
+          /\[prod\]
+          normal! jVjj
+        ]]
+        -- paste the selection
+        vim.cmd [[
+          normal! p
+          normal! dd
+        ]]
+        end, desc = "Replace AWS credentials for Prod" },
+      { "<leader>aq", function()
+        vim.cmd [[
+          normal! gg
+          /\[qa\]
+          normal! jVjj
+        ]]
+        -- paste the selection
+        vim.cmd [[
+          normal! p
+          normal! dd
+        ]]
+        end, desc = "Replace AWS credentials for QA" },
+      { "<leader>as", function()
+        vim.cmd [[
+          normal! gg
+          /\[staging\]
+          normal! jVjj
+        ]]
+        -- paste the selection
+        vim.cmd [[
+          normal! p
+          normal! dd
+        ]]
+        end, desc = "Replace AWS credentials for Staging" },
     },
   },
   {

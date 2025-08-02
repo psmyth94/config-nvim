@@ -122,8 +122,8 @@ return {
 
   -- Linters & formatters
   {
-    'williamboman/mason.nvim',
-    opts = { ensure_installed = { 'sqlfluff' } },
+    'mason-org/mason.nvim',
+    opts = { ensure_installed = { 'sqruff' } },
   },
   {
     'mfussenegger/nvim-lint',
@@ -131,7 +131,7 @@ return {
     opts = function(_, opts)
       for _, ft in ipairs(sql_ft) do
         opts.linters_by_ft[ft] = opts.linters_by_ft[ft] or {}
-        table.insert(opts.linters_by_ft[ft], 'sqlfluff')
+        table.insert(opts.linters_by_ft[ft], 'sqruff')
       end
     end,
   },
@@ -139,12 +139,16 @@ return {
     'stevearc/conform.nvim',
     optional = true,
     opts = function(_, opts)
-      opts.formatters.sqlfluff = {
-        args = { 'format', '--dialect=ansi', '-' },
+      opts.formatters['sqruff'] = {
+        command = 'sqruff',
+        exit_codes = { 0, 1 },
+        stdin = false,
+        -- use SQRUFF_CONFIG env variable to specify the config file
+        args = { '--config', vim.env.SQRUFF_CONFIG or vim.fn.expand '~/.config/sqruff/config.sqruff', 'fix', '$FILENAME' },
       }
       for _, ft in ipairs(sql_ft) do
         opts.formatters_by_ft[ft] = opts.formatters_by_ft[ft] or {}
-        table.insert(opts.formatters_by_ft[ft], 'sqlfluff')
+        table.insert(opts.formatters_by_ft[ft], 'sqruff')
       end
     end,
   },

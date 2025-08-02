@@ -24,6 +24,7 @@ local imports = {
   'psvim.plugins.ai.copilot-chat',
   -- ## lang ##
   'psvim.plugins.lang.ansible',
+  'psvim.plugins.lang.clangd',
   'psvim.plugins.lang.sql',
   'psvim.plugins.lang.python',
   'psvim.plugins.lang.terraform',
@@ -37,8 +38,9 @@ local imports = {
   'psvim.plugins.git.fugitive',
   -- ## editor ##
   'psvim.plugins.editor.snacks_picker',
-  -- ## jupyter ##
+  -- -- ## jupyter ##
   'psvim.plugins.jupyter.jupytext',
+  'psvim.plugins.jupyter.jupynium',
 }
 
 for _, name in ipairs(imports) do
