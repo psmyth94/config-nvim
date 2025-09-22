@@ -22,6 +22,7 @@ local imports = {
   -- ## ai ##
   'psvim.plugins.ai.copilot',
   'psvim.plugins.ai.copilot-chat',
+  -- 'psvim.plugins.ai.avante',
   -- ## lang ##
   'psvim.plugins.lang.ansible',
   'psvim.plugins.lang.clangd',
@@ -34,13 +35,18 @@ local imports = {
   'psvim.plugins.lang.cmake',
   'psvim.plugins.lang.docker',
   'psvim.plugins.lang.bash',
+  'psvim.plugins.lang.helm',
+  'psvim.plugins.lang.json',
   -- ## git ##
   'psvim.plugins.git.fugitive',
   -- ## editor ##
   'psvim.plugins.editor.snacks_picker',
+  'psvim.plugins.editor.neo-tree',
   -- -- ## jupyter ##
-  'psvim.plugins.jupyter.jupytext',
-  'psvim.plugins.jupyter.jupynium',
+  -- 'psvim.plugins.jupyter.jupytext',
+  -- 'psvim.plugins.jupyter.jupynium',
+  'psvim.plugins.jupyter.molten',
+  'psvim.plugins.jupyter.neopyter_test',
 }
 
 for _, name in ipairs(imports) do

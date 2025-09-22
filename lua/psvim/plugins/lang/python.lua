@@ -43,8 +43,10 @@ return {
     'stevearc/conform.nvim',
     optional = true,
     opts = function(_, opts)
-      opts.formatters_by_ft['py'] = opts.formatters_by_ft[ft] or {}
-      table.insert(opts.formatters_by_ft['py'], 'ruff')
+      opts.formatters_by_ft['python'] = opts.formatters_by_ft['python'] or {}
+      table.insert(opts.formatters_by_ft['python'], 'ruff_format')
+      -- opts.formatters_by_ft['py'] = opts.formatters_by_ft['py'] or {}
+      -- table.insert(opts.formatters_by_ft['py'], 'ruff')
     end,
   },
   {

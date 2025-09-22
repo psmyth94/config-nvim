@@ -1,13 +1,13 @@
 return {
   -- statusline
   {
-    "nvim-lualine/lualine.nvim",
-    event = "VeryLazy",
+    'nvim-lualine/lualine.nvim',
+    event = 'VeryLazy',
     init = function()
       vim.g.lualine_laststatus = vim.o.laststatus
       if vim.fn.argc(-1) > 0 then
         -- set an empty statusline till lualine loads
-        vim.o.statusline = " "
+        vim.o.statusline = ' '
       else
         -- hide the statusline on the starter page
         vim.o.laststatus = 0
@@ -15,7 +15,7 @@ return {
     end,
     opts = function()
       -- PERF: we don't need this lualine require madness 🤷
-      local lualine_require = require("lualine_require")
+      local lualine_require = require 'lualine_require'
       lualine_require.require = require
 
       local icons = PSVim.config.icons
@@ -24,18 +24,18 @@ return {
 
       local opts = {
         options = {
-          theme = "auto",
+          theme = 'auto',
           globalstatus = vim.o.laststatus == 3,
-          disabled_filetypes = { statusline = { "dashboard", "alpha", "ministarter", "snacks_dashboard" } },
+          disabled_filetypes = { statusline = { 'dashboard', 'alpha', 'ministarter', 'snacks_dashboard' } },
         },
         sections = {
-          lualine_a = { "mode" },
-          lualine_b = { "branch" },
+          lualine_a = { 'mode' },
+          lualine_b = { 'branch' },
 
           lualine_c = {
             PSVim.lualine.root_dir(),
             {
-              "diagnostics",
+              'diagnostics',
               symbols = {
                 error = icons.diagnostics.Error,
                 warn = icons.diagnostics.Warn,
@@ -43,7 +43,7 @@ return {
                 hint = icons.diagnostics.Hint,
               },
             },
-            { "filetype", icon_only = true, separator = "", padding = { left = 1, right = 0 } },
+            { 'filetype', icon_only = true, separator = '', padding = { left = 1, right = 0 } },
             { PSVim.lualine.pretty_path() },
           },
           lualine_x = {
@@ -73,7 +73,7 @@ return {
               color = function() return { fg = Snacks.util.color("Special") } end,
             },
             {
-              "diff",
+              'diff',
               symbols = {
                 added = icons.git.added,
                 modified = icons.git.modified,
@@ -92,30 +92,30 @@ return {
             },
           },
           lualine_y = {
-            { "progress", separator = " ", padding = { left = 1, right = 0 } },
-            { "location", padding = { left = 0, right = 1 } },
+            { 'progress', separator = ' ', padding = { left = 1, right = 0 } },
+            { 'location', padding = { left = 0, right = 1 } },
           },
           lualine_z = {
             function()
-              return " " .. os.date("%R")
+              return ' ' .. os.date '%R'
             end,
           },
         },
-        extensions = { "neo-tree", "lazy", "fzf" },
+        extensions = { 'neo-tree', 'lazy', 'fzf' },
       }
 
       -- do not add trouble symbols if aerial is enabled
       -- And allow it to be overriden for some buffer types (see autocmds)
-      if vim.g.trouble_lualine and PSVim.has("trouble.nvim") then
-        local trouble = require("trouble")
-        local symbols = trouble.statusline({
-          mode = "symbols",
+      if vim.g.trouble_lualine and PSVim.has 'trouble.nvim' then
+        local trouble = require 'trouble'
+        local symbols = trouble.statusline {
+          mode = 'symbols',
           groups = {},
           title = false,
           filter = { range = true },
-          format = "{kind_icon}{symbol.name:Normal}",
-          hl_group = "lualine_c_normal",
-        })
+          format = '{kind_icon}{symbol.name:Normal}',
+          hl_group = 'lualine_c_normal',
+        }
         table.insert(opts.sections.lualine_c, {
           symbols and symbols.get,
           cond = function()
@@ -130,27 +130,27 @@ return {
 
   -- Highly experimental plugin that completely replaces the UI for messages, cmdline and the popupmenu.
   {
-    "folke/noice.nvim",
-    event = "VeryLazy",
+    'folke/noice.nvim',
+    event = 'VeryLazy',
     opts = {
       lsp = {
         override = {
-          ["vim.lsp.util.convert_input_to_markdown_lines"] = true,
-          ["vim.lsp.util.stylize_markdown"] = true,
-          ["cmp.entry.get_documentation"] = true,
+          ['vim.lsp.util.convert_input_to_markdown_lines'] = true,
+          ['vim.lsp.util.stylize_markdown'] = true,
+          ['cmp.entry.get_documentation'] = true,
         },
       },
       routes = {
         {
           filter = {
-            event = "msg_show",
+            event = 'msg_show',
             any = {
-              { find = "%d+L, %d+B" },
-              { find = "; after #%d+" },
-              { find = "; before #%d+" },
+              { find = '%d+L, %d+B' },
+              { find = '; after #%d+' },
+              { find = '; before #%d+' },
             },
           },
-          view = "mini",
+          view = 'mini',
         },
       },
       presets = {
@@ -175,39 +175,39 @@ return {
       -- HACK: noice shows messages from before it was enabled,
       -- but this is not ideal when Lazy is installing plugins,
       -- so clear the messages in this case.
-      if vim.o.filetype == "lazy" then
-        vim.cmd([[messages clear]])
+      if vim.o.filetype == 'lazy' then
+        vim.cmd [[messages clear]]
       end
-      require("noice").setup(opts)
+      require('noice').setup(opts)
     end,
   },
 
   -- icons
   {
-    "echasnovski/mini.icons",
+    'echasnovski/mini.icons',
     lazy = true,
     opts = {
       file = {
-        [".keep"] = { glyph = "󰊢", hl = "MiniIconsGrey" },
-        ["devcontainer.json"] = { glyph = "", hl = "MiniIconsAzure" },
+        ['.keep'] = { glyph = '󰊢', hl = 'MiniIconsGrey' },
+        ['devcontainer.json'] = { glyph = '', hl = 'MiniIconsAzure' },
       },
       filetype = {
-        dotenv = { glyph = "", hl = "MiniIconsYellow" },
+        dotenv = { glyph = '', hl = 'MiniIconsYellow' },
       },
     },
     init = function()
-      package.preload["nvim-web-devicons"] = function()
-        require("mini.icons").mock_nvim_web_devicons()
-        return package.loaded["nvim-web-devicons"]
+      package.preload['nvim-web-devicons'] = function()
+        require('mini.icons').mock_nvim_web_devicons()
+        return package.loaded['nvim-web-devicons']
       end
     end,
   },
 
   -- ui components
-  { "MunifTanjim/nui.nvim", lazy = true },
+  { 'MunifTanjim/nui.nvim', lazy = true },
 
   {
-    "snacks.nvim",
+    'snacks.nvim',
     opts = {
       indent = { enabled = true },
       input = { enabled = true },

@@ -6,8 +6,8 @@ local M = {}
 
 -- taken from MiniExtra.gen_ai_spec.buffer
 function M.ai_buffer(ai_type)
-  local start_line, end_line = 1, vim.fn.line("$")
-  if ai_type == "i" then
+  local start_line, end_line = 1, vim.fn.line '$'
+  if ai_type == 'i' then
     -- Skip first and last blank lines for `i` textobject
     local first_nonblank, last_nonblank = vim.fn.nextnonblank(start_line), vim.fn.prevnonblank(end_line)
     -- Do nothing for buffer with all blanks
@@ -20,85 +20,84 @@ function M.ai_buffer(ai_type)
   local to_col = math.max(vim.fn.getline(end_line):len(), 1)
   return { from = { line = start_line, col = 1 }, to = { line = end_line, col = to_col } }
 end
-
 -- register all text objects with which-key
 ---@param opts table
 function M.ai_whichkey(opts)
   local objects = {
-    { " ", desc = "whitespace" },
+    { ' ', desc = 'whitespace' },
     { '"', desc = '" string' },
     { "'", desc = "' string" },
-    { "(", desc = "() block" },
-    { ")", desc = "() block with ws" },
-    { "<", desc = "<> block" },
-    { ">", desc = "<> block with ws" },
-    { "?", desc = "user prompt" },
-    { "U", desc = "use/call without dot" },
-    { "[", desc = "[] block" },
-    { "]", desc = "[] block with ws" },
-    { "_", desc = "underscore" },
-    { "`", desc = "` string" },
-    { "a", desc = "argument" },
-    { "b", desc = ")]} block" },
-    { "c", desc = "class" },
-    { "d", desc = "digit(s)" },
-    { "e", desc = "CamelCase / snake_case" },
-    { "f", desc = "function" },
-    { "g", desc = "entire file" },
-    { "i", desc = "indent" },
-    { "o", desc = "block, conditional, loop" },
-    { "q", desc = "quote `\"'" },
-    { "t", desc = "tag" },
-    { "u", desc = "use/call" },
-    { "{", desc = "{} block" },
-    { "}", desc = "{} with ws" },
+    { '(', desc = '() block' },
+    { ')', desc = '() block with ws' },
+    { '<', desc = '<> block' },
+    { '>', desc = '<> block with ws' },
+    { '?', desc = 'user prompt' },
+    { 'U', desc = 'use/call without dot' },
+    { '[', desc = '[] block' },
+    { ']', desc = '[] block with ws' },
+    { '_', desc = 'underscore' },
+    { '`', desc = '` string' },
+    { 'a', desc = 'argument' },
+    { 'b', desc = ')]} block' },
+    { 'c', desc = 'class' },
+    { 'd', desc = 'digit(s)' },
+    { 'e', desc = 'CamelCase / snake_case' },
+    { 'f', desc = 'function' },
+    { 'g', desc = 'entire file' },
+    { 'i', desc = 'indent' },
+    { 'o', desc = 'block, conditional, loop' },
+    { 'q', desc = 'quote `"\'' },
+    { 't', desc = 'tag' },
+    { 'u', desc = 'use/call' },
+    { '{', desc = '{} block' },
+    { '}', desc = '{} with ws' },
   }
 
   ---@type wk.Spec[]
-  local ret = { mode = { "o", "x" } }
+  local ret = { mode = { 'o', 'x' } }
   ---@type table<string, string>
-  local mappings = vim.tbl_extend("force", {}, {
-    around = "a",
-    inside = "i",
-    around_next = "an",
-    inside_next = "in",
-    around_last = "al",
-    inside_last = "il",
+  local mappings = vim.tbl_extend('force', {}, {
+    around = 'a',
+    inside = 'i',
+    around_next = 'an',
+    inside_next = 'in',
+    around_last = 'al',
+    inside_last = 'il',
   }, opts.mappings or {})
   mappings.goto_left = nil
   mappings.goto_right = nil
 
   for name, prefix in pairs(mappings) do
-    name = name:gsub("^around_", ""):gsub("^inside_", "")
+    name = name:gsub('^around_', ''):gsub('^inside_', '')
     ret[#ret + 1] = { prefix, group = name }
     for _, obj in ipairs(objects) do
       local desc = obj.desc
-      if prefix:sub(1, 1) == "i" then
-        desc = desc:gsub(" with ws", "")
+      if prefix:sub(1, 1) == 'i' then
+        desc = desc:gsub(' with ws', '')
       end
       ret[#ret + 1] = { prefix .. obj[1], desc = obj.desc }
     end
   end
-  require("which-key").add(ret, { notify = false })
+  require('which-key').add(ret, { notify = false })
 end
 
 ---@param opts {skip_next: string, skip_ts: string[], skip_unbalanced: boolean, markdown: boolean}
 function M.pairs(opts)
   Snacks.toggle({
-    name = "Mini Pairs",
+    name = 'Mini Pairs',
     get = function()
       return not vim.g.minipairs_disable
     end,
     set = function(state)
       vim.g.minipairs_disable = not state
     end,
-  }):map("<leader>up")
+  }):map '<leader>up'
 
-  local pairs = require("mini.pairs")
+  local pairs = require 'mini.pairs'
   pairs.setup(opts)
   local open = pairs.open
   pairs.open = function(pair, neigh_pattern)
-    if vim.fn.getcmdline() ~= "" then
+    if vim.fn.getcmdline() ~= '' then
       return open(pair, neigh_pattern)
     end
     local o, c = pair:sub(1, 1), pair:sub(2, 2)
@@ -106,10 +105,10 @@ function M.pairs(opts)
     local cursor = vim.api.nvim_win_get_cursor(0)
     local next = line:sub(cursor[2] + 1, cursor[2] + 1)
     local before = line:sub(1, cursor[2])
-    if opts.markdown and o == "`" and vim.bo.filetype == "markdown" and before:match("^%s*``") then
-      return "`\n```" .. vim.api.nvim_replace_termcodes("<up>", true, true, true)
+    if opts.markdown and o == '`' and vim.bo.filetype == 'markdown' and before:match '^%s*``' then
+      return '`\n```' .. vim.api.nvim_replace_termcodes('<up>', true, true, true)
     end
-    if opts.skip_next and next ~= "" and next:match(opts.skip_next) then
+    if opts.skip_next and next ~= '' and next:match(opts.skip_next) then
       return o
     end
     if opts.skip_ts and #opts.skip_ts > 0 then
@@ -121,8 +120,8 @@ function M.pairs(opts)
       end
     end
     if opts.skip_unbalanced and next == c and c ~= o then
-      local _, count_open = line:gsub(vim.pesc(pair:sub(1, 1)), "")
-      local _, count_close = line:gsub(vim.pesc(pair:sub(2, 2)), "")
+      local _, count_open = line:gsub(vim.pesc(pair:sub(1, 1)), '')
+      local _, count_close = line:gsub(vim.pesc(pair:sub(2, 2)), '')
       if count_close > count_open then
         return o
       end
