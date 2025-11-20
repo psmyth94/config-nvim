@@ -3,7 +3,7 @@
 -- use `vim.keymap.set` in downstream files to overwrite these
 local map = PSVim.safe_keymap_set
 
-map('n', '<leader>ex', '<cmd>Ex<cr>', { desc = 'Return to Explorer' })
+map('n', '<leader>pv', '<cmd>Ex<cr>', { desc = 'Return to Explorer' })
 
 -- better up/down
 map({ 'n', 'x' }, 'j', "v:count == 0 ? 'gj' : 'j'", { desc = 'Down', expr = true, silent = true })

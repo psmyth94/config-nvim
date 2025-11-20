@@ -87,6 +87,9 @@ return {
           },
           ['P'] = { 'toggle_preview', config = { use_float = false } },
         },
+        fuzzy_finder_mappings = {
+          ['<C-s>'] = 'close_keep_filter',
+        },
       },
       default_component_configs = {
         indent = {
