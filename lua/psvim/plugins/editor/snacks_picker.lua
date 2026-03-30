@@ -68,6 +68,8 @@ return {
       { "<leader>fw", "<cmd>e ~/.aws/credentials<cr>", desc = "AWS Credentials" },
       { "<leader>ff", PSVim.pick("files"), desc = "Find Files (Root Dir)" },
       { "<leader>fF", PSVim.pick("files", { root = false }), desc = "Find Files (cwd)" },
+      { "<leader>fa", PSVim.pick("files", { hidden = true, nofile = true }), desc = "Find All Files (Root Dir)" },
+      { "<leader>fA", PSVim.pick("files", { hidden = true, nofile = true, root = false }), desc = "Find All Files (cwd)" },
       { "<leader>fg", function() Snacks.picker.git_files() end, desc = "Find Files (git-files)" },
       { "<leader>fr", PSVim.pick("oldfiles"), desc = "Recent" },
       { "<leader>fR", function() Snacks.picker.recent({ filter = { cwd = true }}) end, desc = "Recent (cwd)" },
@@ -106,6 +108,18 @@ return {
       -- ui
       { "<leader>uC", function() Snacks.picker.colorschemes() end, desc = "Colorschemes" },
       -- aws macros
+      { "<leader>ae", function()
+        vim.cmd [[
+          normal! gg
+          /\[default\]
+          normal! jVjj
+        ]]
+        -- paste the selection
+        vim.cmd [[
+          normal! p
+          normal! dd
+        ]]
+        end, desc = "Replace AWS credentials for Default" },
       { "<leader>ad", function()
         vim.cmd [[
           normal! gg
