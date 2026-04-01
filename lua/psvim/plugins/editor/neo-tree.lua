@@ -85,6 +85,15 @@ return {
             end,
             desc = 'Open with System Application',
           },
+          ['W'] = {
+            function(state)
+              local node = state.tree:get_node()
+              local path = node.type == 'directory' and node:get_id() or vim.fn.fnamemodify(node:get_id(), ':h')
+              local win_path = vim.fn.system('wslpath -w ' .. vim.fn.shellescape(path)):gsub('\n', '')
+              vim.fn.jobstart({ 'explorer.exe', win_path }, { detach = true })
+            end,
+            desc = 'Open in Windows Explorer',
+          },
           ['P'] = { 'toggle_preview', config = { use_float = false } },
         },
         fuzzy_finder_mappings = {

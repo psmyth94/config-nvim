@@ -88,6 +88,15 @@ map('n', '<leader>l', '<cmd>PS<cr>', { desc = 'PS' })
 -- new file
 map('n', '<leader>fn', '<cmd>enew<cr>', { desc = 'New File' })
 
+map('n', '<leader>fo', function()
+  local path = vim.fn.expand '%:p:h'
+  if path == '' then
+    path = vim.uv.cwd()
+  end
+  local win_path = vim.fn.system('wslpath -w ' .. vim.fn.shellescape(path)):gsub('\n', '')
+  vim.fn.jobstart({ 'explorer.exe', win_path }, { detach = true })
+end, { desc = 'Open in Windows Explorer' })
+
 -- location list
 map('n', '<leader>xl', function()
   local success, err = pcall(vim.fn.getloclist(0, { winid = 0 }).winid ~= 0 and vim.cmd.lclose or vim.cmd.lopen)
